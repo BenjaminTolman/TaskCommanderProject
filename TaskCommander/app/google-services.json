@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "414502001586",
+    "project_id": "taskcommander-3f0e3",
+    "storage_bucket": "taskcommander-3f0e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414502001586:android:22091de629317c21c6e2ab",
+        "android_client_info": {
+          "package_name": "com.benjamintolman.taskcommander"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414502001586-ia08p86fm3pcp30isr1os2e947u8v5f6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4o1MShwKjsGyo2NBIy9tO_41u5-gMVQc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414502001586-ia08p86fm3pcp30isr1os2e947u8v5f6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
