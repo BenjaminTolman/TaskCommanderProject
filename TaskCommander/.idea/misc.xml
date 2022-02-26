@@ -6,9 +6,15 @@
         <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/Profile_layout.xml" value="0.1311806256306761" />
         <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/Register_layout.xml" value="0.33" />
         <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/activity_main.xml" value="0.23369565217391305" />
-        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/login_layout.xml" value="0.33" />
+        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/dashboard_layout.xml" value="0.5" />
+        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/job_create_layout.xml" value="0.4125" />
+        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/job_item_layout.xml" value="0.36141304347826086" />
+        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/jobs_layout.xml" value="0.36141304347826086" />
+        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/login_layout.xml" value="0.5" />
         <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/profile_layout.xml" value="0.33" />
-        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/register_layout.xml" value="0.23385469223007063" />
+        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/register_layout.xml" value="0.33" />
+        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/menu/jobs_create_menu.xml" value="0.4125" />
+        <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/menu/jobs_menu.xml" value="0.533197139938713" />
       </map>
     </option>
   </component>

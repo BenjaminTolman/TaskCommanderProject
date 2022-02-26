@@ -6,4 +6,23 @@
     <string name="register">Register</string>
     <string name="name">Name</string>
     <string name="phone">Phone</string>
+    <string name="registerlink"><u>Register</u></string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="job_name">Job Name</string>
+    <string name="job_address">Job Address</string>
+    <string name="job_time">Job Time</string>
+    <string name="job_date">Job Date</string>
+
+    <string-array name="roles">
+        <item>Employee</item>
+        <item>Manager</item>
+
+    </string-array>
+
+    <string-array name="jobfilter">
+        <item>Date Added</item>
+        <item>Completed</item>
+
+    </string-array>
 </resources>

@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
+import com.benjamintolman.taskcommander.fragments.DashboardFragment;
+import com.benjamintolman.taskcommander.fragments.SignInFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Job> jobs = new ArrayList<Job>();
     public static ArrayList<Employee> employees = new ArrayList<Employee>();
 
+    public static Employee currentUser;
+
+    public static String currentScreen;
+
 
 
     @Override
@@ -31,5 +37,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        MainActivity.currentScreen = "SignIn";
+        getSupportFragmentManager().beginTransaction().replace(
+                R.id.fragment_holder,
+                SignInFragment.newInstance()
+        ).commit();
+
     }
+
+    @Override
+    public void onBackPressed() {
+        if(currentScreen.equals("Register")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    SignInFragment.newInstance()
+            ).commit();
+        }
+        if(currentScreen.equals("Profile")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    DashboardFragment.newInstance()
+            ).commit();
+        }
+        if(currentScreen.equals("SignIn")){
+            //Ignore
+        }
+    }
+
 }
