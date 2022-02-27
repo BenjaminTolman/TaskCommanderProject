@@ -17,9 +17,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
-import com.benjamintolman.taskcommander.Utils.FirestoreUtility;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class JobCreateFragment extends Fragment implements View.OnClickListener {
 
@@ -85,6 +89,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         if (view.getId() == saveButton.getId()) {
             Log.d(TAG, "SAVE was clicked");
 
+            //todo validate these
             String jobName = jobNameInput.getText().toString();
             String jobAddress = jobAddressInput.getText().toString();
             String jobTime = jobTimeInput.getText().toString();
@@ -94,20 +99,56 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             String clientPhone = clientPhoneInput.getText().toString();
             String employeeAssigned = "Bill Clay";
 
-            //Job newJob = new Job(jobName, jobAddress, jobTime,jobDate, jobNotes, clientName, clientPhone, employeeAssigned);
 
-            //todo NOW we making the reference and doing this.
-            FirestoreUtility.createJob(jobName, jobAddress, jobTime, jobDate, jobNotes, clientName, clientPhone, employeeAssigned);
+
+            //todo this should be getting a company ID and an Employee ID from the selected employee and the current manager.
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            // Create a new user with a first and last name
+
+            Map<String, Object> job = new HashMap<>();
+            job.put("name", jobName);
+            job.put("address", jobAddress);
+            job.put("time", jobTime);
+            job.put("date", jobDate);
+            job.put("notes", jobNotes);
+            job.put("cName", clientName);
+            job.put("cPhone", clientPhone);
+            job.put("assigned", employeeAssigned); //this should be an ID not whatever we have
+
+            //todo adjust this, better way to track job
+
+
+
+            //db.collection(companyCode).document("users").collection("list").document(email).set(user)
+            db.collection("jobs").document(jobName).set(job)
+
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                            getParentFragmentManager().beginTransaction().replace(
+                                    R.id.fragment_holder,
+                                    DashboardFragment.newInstance()
+                            ).commit();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                        }
+                    });
+        }
             //todo validate this and then save to firebase
             //todo do we have a network connection?
 
             //todo finally we go back to dashboard.
 
-            getParentFragmentManager().beginTransaction().replace(
-                    R.id.fragment_holder,
-                    DashboardFragment.newInstance()
-            ).commit();
-        }
+        //todo make tis job and put it in the list.
+        //Job newJob = new Job(jobName, jobAddress, jobTime,jobDate, jobNotes, clientName, clientPhone, employeeAssigned);
+
+
+
 
         if (view.getId() == cancelButton.getId()) {
             Log.d(TAG, "Cancel was clicked");
@@ -135,6 +176,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             case "save":
                 Log.d(TAG, "SAVE was clicked");
 
+                //todo validate these
                 String jobName = jobNameInput.getText().toString();
                 String jobAddress = jobAddressInput.getText().toString();
                 String jobTime = jobTimeInput.getText().toString();
@@ -144,19 +186,43 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                 String clientPhone = clientPhoneInput.getText().toString();
                 String employeeAssigned = "Bill Clay";
 
-                //Job newJob = new Job(jobName, jobAddress, jobTime,jobDate, jobNotes, clientName, clientPhone, employeeAssigned);
 
-                //todo NOW we making the reference and doing this.
-                FirestoreUtility.createJob(jobName, jobAddress, jobTime,jobDate, jobNotes, clientName, clientPhone, employeeAssigned);
-                //todo validate this and then save to firebase
-                //todo do we have a network connection?
 
-                //todo finally we go back to dashboard.
+                //todo this should be getting a company ID and an Employee ID from the selected employee and the current manager.
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // Create a new user with a first and last name
 
-                getParentFragmentManager().beginTransaction().replace(
-                        R.id.fragment_holder,
-                        DashboardFragment.newInstance()
-                ).commit();
+                Map<String, Object> job = new HashMap<>();
+                job.put("name", jobName);
+                job.put("address", jobAddress);
+                job.put("time", jobTime);
+                job.put("date", jobDate);
+                job.put("notes", jobNotes);
+                job.put("cName", clientName);
+                job.put("cPhone", clientPhone);
+                job.put("assigned", employeeAssigned); //this should be an ID not whatever we have
+
+                //todo adjust this, better way to track job
+
+                //db.collection(companyCode).document("users").collection("list").document(email).set(user)
+                db.collection("jobs").document(jobName).set(job)
+
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot successfully written!");
+                                getParentFragmentManager().beginTransaction().replace(
+                                        R.id.fragment_holder,
+                                        DashboardFragment.newInstance()
+                                ).commit();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error writing document", e);
+                            }
+                        });
 
                 break;
 
@@ -169,5 +235,4 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         }
         return false;
     }
-
 }

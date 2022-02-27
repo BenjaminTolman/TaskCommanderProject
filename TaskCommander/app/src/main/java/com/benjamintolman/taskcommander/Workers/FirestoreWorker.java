@@ -10,20 +10,11 @@ import androidx.work.WorkerParameters;
 
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
-import com.benjamintolman.taskcommander.Utils.FirestoreUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class FirestoreWorker extends Worker {
 

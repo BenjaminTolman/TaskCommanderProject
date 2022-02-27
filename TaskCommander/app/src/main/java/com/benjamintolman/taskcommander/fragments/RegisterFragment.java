@@ -13,15 +13,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.benjamintolman.taskcommander.MainActivity;
+import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.R;
-import com.benjamintolman.taskcommander.Utils.FirestoreUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -150,14 +155,42 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
 
             //Send over our new fields to create a user in firebase.
-            FirestoreUtility.createUser(email,name,password,phone,role,companyCode);
+            Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode);
+             MainActivity.currentUser = thisEmployee;
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Create a new user with a first and last name
 
-            //After register we go to dashboard
-            getParentFragmentManager().beginTransaction().replace(
-                    R.id.fragment_holder,
-                    DashboardFragment.newInstance()
-            ).commit();
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", email);
+        user.put("name", name);
+        user.put("password", password);
+        user.put("phone", phone);
+        user.put("role", role);
+        user.put("companycode", companyCode);
+
+        db.collection("users").document(email).set(user)
+
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                        //After register we go to dashboard
+                        getParentFragmentManager().beginTransaction().replace(
+                                R.id.fragment_holder,
+                                DashboardFragment.newInstance()
+                        ).commit();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
         }
 
         //todo put a cancel button

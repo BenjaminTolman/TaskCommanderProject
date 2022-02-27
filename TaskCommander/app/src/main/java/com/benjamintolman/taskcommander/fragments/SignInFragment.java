@@ -1,6 +1,5 @@
 package com.benjamintolman.taskcommander.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,24 +14,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.R;
-import com.benjamintolman.taskcommander.Utils.FirestoreUtility;
-import com.benjamintolman.taskcommander.Workers.FirestoreWorker;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.UUID;
 
 public class SignInFragment extends Fragment implements View.OnClickListener {
 
