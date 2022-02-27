@@ -10,19 +10,33 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
+import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.Utils.FirestoreUtility;
+import com.benjamintolman.taskcommander.Workers.FirestoreWorker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.UUID;
 
 public class SignInFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "SignInFragment";
-    public static Employee currentEmployee;
 
     EditText emailInput;
     EditText passwordIntput;
@@ -52,6 +66,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
         Activity activity = getActivity();
         activity.setTitle(R.string.sign_in);
+        MainActivity.currentScreen = "SignIn";
 
         return view;
     }
@@ -59,20 +74,56 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
 
-        if(view.getId() == signInButton.getId()){
-            Log.d(TAG, "Sign in button tapped");
+        if (view.getId() == signInButton.getId()) {
 
             //Todo these need to be validated
-            FirestoreUtility.signIn(emailInput.getText().toString(), passwordIntput.getText().toString());
+            //FirestoreUtility.signIn(emailInput.getText().toString(), passwordIntput.getText().toString());
 
-            //todo actually check credentials
-            getParentFragmentManager().beginTransaction().replace(
-                    R.id.fragment_holder,
-                    DashboardFragment.newInstance()
-            ).commit();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            db.collection("users")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                    if (document.getId().equals(emailInput.getText().toString())) {
+                                        String passString = document.get("password").toString();
+                                        if (passString.equals(passwordIntput.getText().toString())) {
+
+                                            //This becomes the user in MainActivity.
+                                            Employee thisEmployee = new Employee(
+                                                    document.get("email").toString(),
+                                                    document.get("name").toString(),
+                                                    document.get("password").toString(),
+                                                    document.get("phone").toString(),
+                                                    document.get("role").toString(),
+                                                    document.get("companycode").toString()
+                                            );
+
+                                            MainActivity.currentUser = thisEmployee;
+
+                                            getParentFragmentManager().beginTransaction().replace(
+                                                    R.id.fragment_holder,
+                                                    DashboardFragment.newInstance()
+                                            ).commit();
+
+                                        } else {
+                                            Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();            
+                                        }
+                                    }
+                                }
+                            } else {
+                                Log.w(TAG, "Error getting documents.", task.getException());
+                            }
+                        }
+                    });
         }
 
-        if(view.getId() == registerButton.getId()){
+        if (view.getId() == registerButton.getId()) {
             Log.d(TAG, "Register");
 
             getParentFragmentManager().beginTransaction().replace(
@@ -82,3 +133,4 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         }
     }
 }
+

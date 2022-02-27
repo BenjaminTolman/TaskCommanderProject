@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -111,19 +112,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         if (view.getId() == updateButton.getId()) {
             Log.d(TAG, "Update button tapped");
 
-            //todo validate all fields before sending to firebaseUtil
-
             email = emailInput.getText().toString();
 
             if (!email.isEmpty()) {
                 if (!ValidationUtility.isEmailValid(email)) {
-                    //todo why
-                    Log.d("FALSE ", email);
+                    Toast.makeText(getContext(), "There was a problem with the email format.", Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else {
                 //email is empty
-                Log.d("FALSE ", "email is empty");
+                Toast.makeText(getContext(), "Email is required.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -131,38 +129,41 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
             if (!name.isEmpty()) {
                 if (!ValidationUtility.validatename(name)) {
-                    //todo why
-                    Log.d("FALSE ", name);
+                    Toast.makeText(getContext(), "Name must be less than 30 characters long.", Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else {
-                //name is empty
+                Toast.makeText(getContext(), "Name is required.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             password = passwordInput.getText().toString();
             if (!password.isEmpty()) {
                 if (!ValidationUtility.validatePassword(password)) {
-                    //todo why
-                    Log.d("FALSE ", password);
+                    Toast.makeText(getContext(), "Password must be 10 characters.", Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else {
                 //name is empty
-                Log.d("FALSE ", "password empty");
+                Toast.makeText(getContext(), "Password is required.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             phone = phoneInput.getText().toString();
-            if (!ValidationUtility.validatePhone(phone)) {
-                //todo why
-                Log.d("FALSE ", phone);
-                return;
+            if (!password.isEmpty()) {
+                if (!ValidationUtility.validatePhone(phone)) {
+                    Toast.makeText(getContext(), "There was a problem with the Phone format.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }else
+            {
+                Toast.makeText(getContext(), "Phone number is required.", Toast.LENGTH_SHORT).show();
             }
 
             TextView spinnerView = (TextView) roleSpinner.getSelectedView();
             role = spinnerView.getText().toString();
 
+            //todo validate company code.
             companyCode = companyCodeInput.getText().toString();
 
             //Send over our new fields to create a user in firebase.
@@ -176,8 +177,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         }
 
         if (view.getId() == deleteButton.getId()) {
-            //todo delete this user, then go to sign in page.
-            Log.d("DELETE ", "DELETE");
+
+            email = emailInput.getText().toString();
+            FirestoreUtility.deleteUser(email);
+
+            //After register we go to dashboard
+            getParentFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    SignInFragment.newInstance()
+            ).commit();
         }
     }
 
