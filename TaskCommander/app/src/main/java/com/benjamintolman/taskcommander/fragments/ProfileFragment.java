@@ -175,49 +175,89 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
             //Send over our new fields to create a user in firebase.
             //Does email = the same user?
-            if(email.equals(MainActivity.currentUser.getEmail())){
+            if(email.equals(MainActivity.currentUser.getEmail())) {
                 Log.d("EMAIL MATCHES ", "it does it does!");
+
+                Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode);
+                MainActivity.currentUser = thisEmployee;
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // Create a new user with a first and last name
+
+                Map<String, Object> user = new HashMap<>();
+                user.put("email", email);
+                user.put("name", name);
+                user.put("password", password);
+                user.put("phone", phone);
+                user.put("role", role);
+                user.put("companycode", companyCode);
+
+                db.collection("users").document(email).set(user)
+
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                                //After register we go to dashboard
+                                getParentFragmentManager().beginTransaction().replace(
+                                        R.id.fragment_holder,
+                                        DashboardFragment.newInstance()
+                                ).commit();
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error writing document", e);
+                            }
+                        });
             }
-            //todo get current user email, if this email is different then create user and delete
-            //todo the current one, if this is the same then update the user.
+            //todo Email does not match, so we need to get all the data and create a new user.
+            else{
+                Log.d("EMAIL MATCHES ", "it does it does!");
 
-            Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode);
-            MainActivity.currentUser = thisEmployee;
+                Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode);
+                MainActivity.currentUser = thisEmployee;
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            // Create a new user with a first and last name
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // Create a new user with a first and last name
 
-            Map<String, Object> user = new HashMap<>();
-            user.put("email", email);
-            user.put("name", name);
-            user.put("password", password);
-            user.put("phone", phone);
-            user.put("role", role);
-            user.put("companycode", companyCode);
+                Map<String, Object> user = new HashMap<>();
+                user.put("email", email);
+                user.put("name", name);
+                user.put("password", password);
+                user.put("phone", phone);
+                user.put("role", role);
+                user.put("companycode", companyCode);
 
+                db.collection("users").document(email).set(user)
 
-            db.collection("users").document(email).set(user)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
 
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot successfully written!");
 
-                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                                //After register we go to dashboard
+                                getParentFragmentManager().beginTransaction().replace(
+                                        R.id.fragment_holder,
+                                        DashboardFragment.newInstance()
+                                ).commit();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error writing document", e);
+                            }
+                        });
 
-                            //After register we go to dashboard
-                            getParentFragmentManager().beginTransaction().replace(
-                                    R.id.fragment_holder,
-                                    DashboardFragment.newInstance()
-                            ).commit();
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error writing document", e);
-                        }
-                    });
+                //todo make sure to get the current user email before this happens so that when we delete
+                //todo it's the correct email and not the one we just made.
+            }
 
 
         }
