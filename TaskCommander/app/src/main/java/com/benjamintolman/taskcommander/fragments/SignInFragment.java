@@ -24,6 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Locale;
+
 public class SignInFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "SignInFragment";
@@ -80,7 +82,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                    if (document.getId().equals(emailInput.getText().toString())) {
+                                    if (document.getId().equals(emailInput.getText().toString().toLowerCase(Locale.ROOT))) {
                                         String passString = document.get("password").toString();
                                         if (passString.equals(passwordIntput.getText().toString())) {
 

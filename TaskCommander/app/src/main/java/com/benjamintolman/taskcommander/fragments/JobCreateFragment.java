@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +29,8 @@ import java.util.Map;
 public class JobCreateFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "JobCreationFragment";
+
+    public static String assignmentSelection;
 
     //todo is this a manager? Does it even matter here? Should be a manager if they get to this page.
 
@@ -70,6 +73,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         clientNameInput = view.findViewById(R.id.job_creation_client_name);
         clientPhoneInput = view.findViewById(R.id.job_creation_phone);
         employeeAssignment = view.findViewById(R.id.job_creation_assignment);
+        employeeAssignment.setOnClickListener(this);
 
         saveButton = view.findViewById(R.id.job_creation_save_button);
         saveButton.setOnClickListener(this);
@@ -85,6 +89,18 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
+
+        if(view.getId() == employeeAssignment.getId()){
+            Log.d("employee Assignment", "CLICKED");
+
+            //todo add to backstack and deal with that.
+            getParentFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    EmployeeChooserFragment.newInstance()
+            ).commit();
+
+            return;
+        }
 
         if (view.getId() == saveButton.getId()) {
             Log.d(TAG, "SAVE was clicked");
@@ -113,6 +129,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             job.put("notes", jobNotes);
             job.put("cName", clientName);
             job.put("cPhone", clientPhone);
+            job.put("companycode", MainActivity.currentUser.getCompanyCode());
             job.put("assigned", employeeAssigned); //this should be an ID not whatever we have
 
             //todo adjust this, better way to track job

@@ -217,10 +217,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             }
             //todo Email does not match, so we need to get all the data and create a new user.
             else{
-                Log.d("EMAIL MATCHES ", "it does it does!");
+                Log.d("EMAIL MATCHES ", "it does it NOT!");
 
                 Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode);
-                MainActivity.currentUser = thisEmployee;
+
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 // Create a new user with a first and last name
@@ -241,7 +241,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
                                 Log.d(TAG, "DocumentSnapshot successfully written!");
 
+                                //After register we delete original
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error writing document", e);
+                            }
+                        });
+
+
+                DocumentReference dr = db.collection("users").document(MainActivity.currentUser.getEmail());
+                dr.delete()
+
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                Log.d(TAG, "DocumentSnapshot successfully Deleted!");
                                 //After register we go to dashboard
+
+                                MainActivity.currentUser = thisEmployee;
+
                                 getParentFragmentManager().beginTransaction().replace(
                                         R.id.fragment_holder,
                                         DashboardFragment.newInstance()
@@ -251,9 +273,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error writing document", e);
+                                Log.w(TAG, "Error deleting document", e);
                             }
                         });
+
+
+
 
                 //todo make sure to get the current user email before this happens so that when we delete
                 //todo it's the correct email and not the one we just made.

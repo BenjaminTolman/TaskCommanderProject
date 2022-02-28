@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
@@ -153,6 +154,9 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
             companyCode = companyCodeInput.getText().toString();
 
+
+            //set email to all lowercase
+            email = email.toLowerCase(Locale.ROOT);
 
             //Send over our new fields to create a user in firebase.
             Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode);

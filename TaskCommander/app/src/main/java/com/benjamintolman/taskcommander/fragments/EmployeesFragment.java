@@ -16,9 +16,6 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener 
 
     public static final String TAG = "EmployeesFragment";
 
-    //todo is this a manager? Does it even matter here? Should be a manager if they get to this page.
-
-
     public static EmployeesFragment newInstance() {
 
         Bundle args = new Bundle();
