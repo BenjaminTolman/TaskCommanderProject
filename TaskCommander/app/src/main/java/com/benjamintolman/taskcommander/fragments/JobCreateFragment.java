@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
+import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,7 +47,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     Button saveButton;
     Button cancelButton;
 
-
     public static JobCreateFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -57,7 +59,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
 
         View view = inflater.inflate(R.layout.job_create_layout, container, false);
 
@@ -126,7 +127,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         @Override
         public boolean onOptionsItemSelected (MenuItem item){
             String id = item.toString();
-            Intent intent;
 
             switch (id) {
                 case "save":
@@ -145,7 +145,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             return false;
         }
 
-
         public void saveJob() {
             //todo validate these
             String jobName = jobNameInput.getText().toString();
@@ -157,6 +156,46 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             String clientPhone = clientPhoneInput.getText().toString();
             String employeeAssigned = "Bill Clay";
 
+            if (!jobName.isEmpty()) {
+
+                    Toast.makeText(getContext(), "Job Name is Empty.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            if (!jobAddress.isEmpty()) {
+
+                Toast.makeText(getContext(), "Job Address is Empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!jobTime.isEmpty()) {
+
+                Toast.makeText(getContext(), "Job Time is Empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!jobDate.isEmpty()) {
+
+                Toast.makeText(getContext(), "Job Date is Empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!jobNotes.isEmpty()) {
+
+                Toast.makeText(getContext(), "Job Notes are Empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!clientName.isEmpty()) {
+
+                Toast.makeText(getContext(), "Client Name is Empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!clientPhone.isEmpty()) {
+
+                Toast.makeText(getContext(), "Client Phone is Empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!employeeAssigned.isEmpty()) {
+
+                Toast.makeText(getContext(), "Employee assigned is Empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             //todo this should be getting a company ID and an Employee ID from the selected employee and the current manager.
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -209,6 +248,5 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                             Log.w(TAG, "Error writing document", e);
                         }
                     });
-
         }
     }
