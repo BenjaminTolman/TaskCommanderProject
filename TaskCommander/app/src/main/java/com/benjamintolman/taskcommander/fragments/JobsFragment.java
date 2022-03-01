@@ -26,11 +26,11 @@ import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.adapters.JobsAdapter;
 
-public class JobsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
+public class JobsFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "JobsFragment";
 
-    //todo is this a manager? Does it even matter here? If he is, show all jobs, if not show the assigned jobs.
+    //todo is this a manager? If this is, show all jobs, if not show the assigned jobs.
 
     ListView jobsList;
     Spinner filterSpinner;
@@ -54,10 +54,6 @@ public class JobsFragment extends Fragment implements View.OnClickListener, Adap
 
         jobsList = view.findViewById(R.id.jobs_listview);
 
-        //todo jobs need a company code
-        MainActivity.jobs.add(new Job("jobName", "6227 s k st, Tacoma WA 98408", "08:45","11/22/22", "These are some job notes", "Johnny Jingles", "253-359-3030", "Bill Clay"));
-
-
         JobsAdapter jobsAdapter = new JobsAdapter(MainActivity.jobs,getContext());
 
         jobsList.setAdapter(jobsAdapter);
@@ -75,10 +71,7 @@ public class JobsFragment extends Fragment implements View.OnClickListener, Adap
         filterSpinner.setSelection(0,false);
         filterSpinner.setOnItemSelectedListener(this);
 
-        //todo should be a check to see if this is a manager as soon as possible and keep the user profile in main activity.
         Activity activity = getActivity();
-
-        //todo is manager? this is Jobs, is this an employee? this is My Jobs
         activity.setTitle("Jobs");
 
         return view;
@@ -118,17 +111,11 @@ public class JobsFragment extends Fragment implements View.OnClickListener, Adap
     }
 
     @Override
-    public void onClick(View view) {
-
-    //todo this should be a listview item click
-
-    }
-
-    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         Job thisJob = MainActivity.jobs.get(i);
-        Log.d("JOB CLICKED ", thisJob.getJobAddress());
+
+        //todo this needs to open job details with
     }
 
     @Override

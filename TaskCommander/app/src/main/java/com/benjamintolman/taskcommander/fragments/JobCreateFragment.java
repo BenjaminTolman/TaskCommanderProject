@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.benjamintolman.taskcommander.MainActivity;
+import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,7 +81,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         cancelButton = view.findViewById(R.id.job_creation_cancel_button);
         cancelButton.setOnClickListener(this);
 
-        //todo should be a check to see if this is a manager as soon as possible and keep the user profile in main activity.
         Activity activity = getActivity();
         activity.setTitle("Create Job");
 
@@ -90,7 +90,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View view) {
 
-        if(view.getId() == employeeAssignment.getId()){
+        if (view.getId() == employeeAssignment.getId()) {
             Log.d("employee Assignment", "CLICKED");
 
             //todo add to backstack and deal with that.
@@ -103,8 +103,51 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         }
 
         if (view.getId() == saveButton.getId()) {
-            Log.d(TAG, "SAVE was clicked");
+            saveJob();
 
+
+            if (view.getId() == cancelButton.getId()) {
+                Log.d(TAG, "Cancel was clicked");
+
+                getParentFragmentManager().beginTransaction().replace(
+                        R.id.fragment_holder,
+                        DashboardFragment.newInstance()
+                ).commit();
+            }
+        }
+    }
+
+        @Override
+        public void onCreateOptionsMenu (@NonNull Menu menu, @NonNull MenuInflater inflater){
+            //super.onCreateOptionsMenu(menu, inflater);
+            inflater = getActivity().getMenuInflater();
+            inflater.inflate(R.menu.jobs_create_menu, menu);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected (MenuItem item){
+            String id = item.toString();
+            Intent intent;
+
+            switch (id) {
+                case "save":
+                    Log.d(TAG, "SAVE was clicked");
+                    saveJob();
+
+                    break;
+
+                case "nav":
+                    Log.d(TAG, "Nav was clicked");
+                    break;
+
+                default:
+                    return false;
+            }
+            return false;
+        }
+
+
+        public void saveJob() {
             //todo validate these
             String jobName = jobNameInput.getText().toString();
             String jobAddress = jobAddressInput.getText().toString();
@@ -114,7 +157,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             String clientName = clientNameInput.getText().toString();
             String clientPhone = clientPhoneInput.getText().toString();
             String employeeAssigned = "Bill Clay";
-
 
 
             //todo this should be getting a company ID and an Employee ID from the selected employee and the current manager.
@@ -130,11 +172,10 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             job.put("cName", clientName);
             job.put("cPhone", clientPhone);
             job.put("companycode", MainActivity.currentUser.getCompanyCode());
-            job.put("assigned", employeeAssigned); //this should be an ID not whatever we have
+            job.put("assigned", employeeAssigned);
+            //this should be an ID not whatever we have
 
             //todo adjust this, better way to track job
-
-
 
             //db.collection(companyCode).document("users").collection("list").document(email).set(user)
             db.collection("jobs").document(jobName).set(job)
@@ -143,6 +184,20 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                            Job newJob = new Job(
+                                    jobName,
+                                    jobAddress,
+                                    jobTime,
+                                    jobDate,
+                                    jobNotes,
+                                    clientName,
+                                    clientPhone,
+                                    employeeAssigned
+                            );
+
+                            MainActivity.jobs.add(newJob);
+
                             getParentFragmentManager().beginTransaction().replace(
                                     R.id.fragment_holder,
                                     DashboardFragment.newInstance()
@@ -155,101 +210,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                             Log.w(TAG, "Error writing document", e);
                         }
                     });
-        }
-            //todo validate this and then save to firebase
-            //todo do we have a network connection?
 
-            //todo finally we go back to dashboard.
-
-        //todo make tis job and put it in the list.
-        //Job newJob = new Job(jobName, jobAddress, jobTime,jobDate, jobNotes, clientName, clientPhone, employeeAssigned);
-
-
-
-
-        if (view.getId() == cancelButton.getId()) {
-            Log.d(TAG, "Cancel was clicked");
-
-            getParentFragmentManager().beginTransaction().replace(
-                    R.id.fragment_holder,
-                    DashboardFragment.newInstance()
-            ).commit();
         }
     }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        //super.onCreateOptionsMenu(menu, inflater);
-        inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.jobs_create_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        String id = item.toString();
-        Intent intent;
-
-        switch(id){
-            case "save":
-                Log.d(TAG, "SAVE was clicked");
-
-                //todo validate these
-                String jobName = jobNameInput.getText().toString();
-                String jobAddress = jobAddressInput.getText().toString();
-                String jobTime = jobTimeInput.getText().toString();
-                String jobDate = jobDateInput.getText().toString();
-                String jobNotes = jobNotesInput.getText().toString();
-                String clientName = clientNameInput.getText().toString();
-                String clientPhone = clientPhoneInput.getText().toString();
-                String employeeAssigned = "Bill Clay";
-
-
-
-                //todo this should be getting a company ID and an Employee ID from the selected employee and the current manager.
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                // Create a new user with a first and last name
-
-                Map<String, Object> job = new HashMap<>();
-                job.put("name", jobName);
-                job.put("address", jobAddress);
-                job.put("time", jobTime);
-                job.put("date", jobDate);
-                job.put("notes", jobNotes);
-                job.put("cName", clientName);
-                job.put("cPhone", clientPhone);
-                job.put("assigned", employeeAssigned); //this should be an ID not whatever we have
-
-                //todo adjust this, better way to track job
-
-                //db.collection(companyCode).document("users").collection("list").document(email).set(user)
-                db.collection("jobs").document(jobName).set(job)
-
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot successfully written!");
-                                getParentFragmentManager().beginTransaction().replace(
-                                        R.id.fragment_holder,
-                                        DashboardFragment.newInstance()
-                                ).commit();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error writing document", e);
-                            }
-                        });
-
-                break;
-
-            case "nav":
-                Log.d(TAG, "Nav was clicked");
-                break;
-
-            default:
-                return false;
-        }
-        return false;
-    }
-}

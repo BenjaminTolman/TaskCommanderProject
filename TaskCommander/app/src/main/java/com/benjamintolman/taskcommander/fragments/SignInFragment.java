@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
+import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -69,6 +70,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         if (view.getId() == signInButton.getId()) {
 
             //Todo these need to be validated
+            //todo this can be greatly improved if we save the company ID to local options
+
             //FirestoreUtility.signIn(emailInput.getText().toString(), passwordIntput.getText().toString());
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -98,13 +101,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
                                             MainActivity.currentUser = thisEmployee;
 
-                                            getParentFragmentManager().beginTransaction().replace(
-                                                    R.id.fragment_holder,
-                                                    DashboardFragment.newInstance()
-                                            ).commit();
-
                                         } else {
-                                            Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();            
+                                            Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -113,6 +111,51 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                             }
                         }
                     });
+
+            db.collection("jobs")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                    String companyCode = document.get("companycode").toString();
+                                    if (companyCode.equals("companycode")) {
+
+                                        Job newJob = new Job(
+                                                document.get("name").toString(),
+                                                document.get("address").toString(),
+                                                document.get("time").toString(),
+                                                document.get("date").toString(),
+                                                document.get("notes").toString(),
+                                                document.get("cName").toString(),
+                                                document.get("cPhone").toString(),
+                                                document.get("assigned").toString()
+                                        );
+
+                                        MainActivity.jobs.add(newJob);
+
+                                        } else {
+                                            Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+                             else {
+                                Log.w(TAG, "Error getting documents.", task.getException());
+                            }
+
+                            getParentFragmentManager().beginTransaction().replace(
+                                    R.id.fragment_holder,
+                                    DashboardFragment.newInstance()
+                            ).commit();
+                        }
+
+                    });
+
+            //todo get employees too if company code is this company.
+            //todo switch to having a company collection for beta.
         }
 
         if (view.getId() == registerButton.getId()) {
