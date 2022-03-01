@@ -156,6 +156,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             String clientPhone = clientPhoneInput.getText().toString();
             String employeeAssigned = "Bill Clay";
 
+            //todo these are not done yet
             if (!jobName.isEmpty()) {
 
                     Toast.makeText(getContext(), "Job Name is Empty.", Toast.LENGTH_SHORT).show();
