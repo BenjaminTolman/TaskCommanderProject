@@ -13,11 +13,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.R;
@@ -115,6 +113,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         String phone = "";
         String role = "";
         String companyCode = "";
+
+        if(view.getId() == cancelButton.getId()){
+            getParentFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    DashboardFragment.newInstance()
+            ).commit();
+        }
 
         if (view.getId() == updateButton.getId()) {
             Log.d(TAG, "Update button tapped");

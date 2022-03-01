@@ -1,7 +1,6 @@
 package com.benjamintolman.taskcommander.Utils;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,8 +9,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -40,6 +37,7 @@ public class LocationUtility extends AppCompatActivity implements View.OnClickLi
 
                 // Display the latitude and longitude.
                 if(lastKnown != null){
+
                     //TextView latitude = (TextView) findViewById(R.id.text_latitude);
                     //latitude.setText(Double.toString(lastKnown.getLatitude()));
 

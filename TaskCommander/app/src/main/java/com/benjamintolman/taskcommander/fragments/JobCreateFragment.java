@@ -12,11 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
@@ -83,6 +81,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
         Activity activity = getActivity();
         activity.setTitle("Create Job");
+        MainActivity.currentScreen = "Create Job";
 
         return view;
     }

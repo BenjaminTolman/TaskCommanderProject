@@ -12,18 +12,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
+import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -181,6 +185,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
                         Log.d(TAG, "DocumentSnapshot successfully written!");
 
+                        getJobs();
+
                         //After register we go to dashboard
                         getParentFragmentManager().beginTransaction().replace(
                                 R.id.fragment_holder,
@@ -209,6 +215,46 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
     }
 
+    public void getJobs(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("jobs")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                String companyCode = document.get("companycode").toString();
+                                if (companyCode.equals("companycode")) {
+
+                                    Job newJob = new Job(
+                                            document.get("name").toString(),
+                                            document.get("address").toString(),
+                                            document.get("time").toString(),
+                                            document.get("date").toString(),
+                                            document.get("notes").toString(),
+                                            document.get("cName").toString(),
+                                            document.get("cPhone").toString(),
+                                            document.get("assigned").toString()
+                                    );
+
+                                    MainActivity.jobs.add(newJob);
+
+                                } else {
+                                    Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                        else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+
+                });
+    }
 
 
 }

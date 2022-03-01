@@ -1,26 +1,14 @@
 package com.benjamintolman.taskcommander;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.fragments.DashboardFragment;
+import com.benjamintolman.taskcommander.fragments.JobsFragment;
 import com.benjamintolman.taskcommander.fragments.SignInFragment;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "Main Activity";
@@ -31,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     public static Employee currentUser;
 
     public static String currentScreen;
+
+    public static Job currentJob;
 
     public static Activity activity;
 
@@ -46,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
                 R.id.fragment_holder,
                 SignInFragment.newInstance()
         ).commit();
-
     }
 
     @Override
     public void onBackPressed() {
+
         if(currentScreen.equals("Register")){
             getSupportFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
@@ -65,6 +55,24 @@ public class MainActivity extends AppCompatActivity {
         }
         if(currentScreen.equals("SignIn")){
             //Ignore
+        }
+        if(currentScreen.equals("Jobs")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    DashboardFragment.newInstance()
+            ).commit();
+        }
+        if(currentScreen.equals("Job Details")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    JobsFragment.newInstance()
+            ).commit();
+        }
+        if(currentScreen.equals("Create Job")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    JobsFragment.newInstance()
+            ).commit();
         }
     }
 }

@@ -94,5 +94,5 @@ public class ValidationUtility {
         return false;
     }
 
-    //todo validate job stuff
+    //todo validate job fields
 }

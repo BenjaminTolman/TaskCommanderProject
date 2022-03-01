@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.benjamintolman.taskcommander.Objects.Employee;
-import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 
 import java.util.ArrayList;
@@ -75,12 +73,10 @@ public class EmployeeAdapter extends BaseAdapter {
         if (position <= getCount()) {
             TextView eName = convertView.findViewById(R.id.employee_item_name);
 
-
             //ImageView image = convertView.findViewById(R.id.imageView);
             eName.setText(employee.getName());
 
-            //bookName.setText(book.getmTitle());
-            //String icon = book.getmImageURL();
+            //String icon = thisObject.getmImageURL();
             //Picasso.get().load(icon).into(image);
         }
 

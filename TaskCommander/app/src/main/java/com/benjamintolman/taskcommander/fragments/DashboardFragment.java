@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.benjamintolman.taskcommander.R;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener {
@@ -56,19 +54,16 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     public void onClick(View view) {
 
         if(view.getId() == jobsButton.getId()){
-            Log.d(TAG, "Jobs button tapped");
+
             getParentFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
                     JobsFragment.newInstance()
             ).commit();
         }
         if(view.getId() == employeesButton.getId()){
-            Log.d(TAG, "Employees button tapped");
+
             //todo this should go to the employees screen
-            getParentFragmentManager().beginTransaction().replace(
-                    R.id.fragment_holder,
-                    RegisterFragment.newInstance()
-            ).commit();
+
         }
         if(view.getId() == profileButton.getId()){
 

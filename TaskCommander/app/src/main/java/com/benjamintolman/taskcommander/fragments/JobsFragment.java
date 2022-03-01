@@ -12,15 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
@@ -73,6 +69,7 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
 
         Activity activity = getActivity();
         activity.setTitle("Jobs");
+        MainActivity.currentScreen = "Jobs";
 
         return view;
     }
@@ -114,6 +111,13 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         Job thisJob = MainActivity.jobs.get(i);
+        MainActivity.currentJob = thisJob;
+
+        getParentFragmentManager().beginTransaction().replace(
+                R.id.fragment_holder,
+                JobDetailsFragment.newInstance()
+        ).commit();
+
 
         //todo this needs to open job details with
     }

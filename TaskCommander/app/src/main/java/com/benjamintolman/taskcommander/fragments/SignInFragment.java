@@ -10,11 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
@@ -35,6 +33,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     EditText passwordIntput;
     Button signInButton;
     TextView registerButton;
+
+    boolean logInSuccess = false;
 
     public static SignInFragment newInstance() {
 
@@ -99,10 +99,13 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                                     document.get("companycode").toString()
                                             );
 
+                                            logInSuccess = true;
+
                                             MainActivity.currentUser = thisEmployee;
+                                            getJobs();
 
                                         } else {
-                                            Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();
+
                                         }
                                     }
                                 }
@@ -110,48 +113,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 Log.w(TAG, "Error getting documents.", task.getException());
                             }
                         }
-                    });
-
-            db.collection("jobs")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-
-                                    String companyCode = document.get("companycode").toString();
-                                    if (companyCode.equals("companycode")) {
-
-                                        Job newJob = new Job(
-                                                document.get("name").toString(),
-                                                document.get("address").toString(),
-                                                document.get("time").toString(),
-                                                document.get("date").toString(),
-                                                document.get("notes").toString(),
-                                                document.get("cName").toString(),
-                                                document.get("cPhone").toString(),
-                                                document.get("assigned").toString()
-                                        );
-
-                                        MainActivity.jobs.add(newJob);
-
-                                        } else {
-                                            Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-                             else {
-                                Log.w(TAG, "Error getting documents.", task.getException());
-                            }
-
-                            getParentFragmentManager().beginTransaction().replace(
-                                    R.id.fragment_holder,
-                                    DashboardFragment.newInstance()
-                            ).commit();
-                        }
-
                     });
 
             //todo get employees too if company code is this company.
@@ -166,6 +127,52 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                     RegisterFragment.newInstance()
             ).commit();
         }
+    }
+
+    public void getJobs(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("jobs")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                String companyCode = document.get("companycode").toString();
+                                if (companyCode.equals("companycode")) {
+
+                                    Job newJob = new Job(
+                                            document.get("name").toString(),
+                                            document.get("address").toString(),
+                                            document.get("time").toString(),
+                                            document.get("date").toString(),
+                                            document.get("notes").toString(),
+                                            document.get("cName").toString(),
+                                            document.get("cPhone").toString(),
+                                            document.get("assigned").toString()
+                                    );
+
+                                    MainActivity.jobs.add(newJob);
+
+                                } else {
+                                    Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                        else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+
+                        getParentFragmentManager().beginTransaction().replace(
+                                R.id.fragment_holder,
+                                DashboardFragment.newInstance()
+                        ).commit();
+                    }
+
+                });
     }
 }
 

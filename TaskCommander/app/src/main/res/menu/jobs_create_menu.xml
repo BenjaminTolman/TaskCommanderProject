@@ -6,7 +6,7 @@
         android:title="save"
         app:showAsAction="always" />
     <item
-        android:icon="@android:drawable/ic_dialog_info"
+        android:icon="@drawable/hamburger"
         android:orderInCategory="100"
         android:title="nav"
         app:showAsAction="always">
