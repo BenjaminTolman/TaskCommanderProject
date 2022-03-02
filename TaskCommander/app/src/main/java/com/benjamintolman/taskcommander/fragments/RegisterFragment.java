@@ -1,7 +1,17 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +20,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
@@ -28,7 +40,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -36,6 +55,16 @@ import java.util.Map;
 public class RegisterFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "RegisterFragment";
+
+    private static final int CAMERA_REQUEST = 1888;
+
+    private static final int MY_CAMERA_PERMISSION_CODE = 100;
+
+    ImageView profileImage;
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    Bitmap profileImageBitmap;
 
     EditText emailInput;
     EditText nameInput;
@@ -68,6 +97,9 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         registerButton = view.findViewById(R.id.register_register_button);
         registerButton.setOnClickListener(this);
 
+        profileImage = view.findViewById(R.id.registration_profileimage);
+        profileImage.setOnClickListener(this);
+
         roleSpinner = view.findViewById(R.id.register_role_spinner);
 
         //Create and ArrayAdapter using the string array in strings and a default spinner layout.
@@ -96,6 +128,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         String phone = "";
         String role = "";
         String companyCode = "";
+
+        if(view.getId() == profileImage.getId()){
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        }
 
         if(view.getId() == registerButton.getId()){
             Log.d(TAG, "Register button tapped");
@@ -254,5 +291,89 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageData)
+    {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            Bitmap photo = (Bitmap) imageData.getExtras().get("data");
+
+            Bitmap circleBitmap = getCircularBitmap(photo);
+            profileImage.setImageBitmap(circleBitmap);
+
+            //todo upload image to firestore
+
+            // Create a Cloud Storage reference from the app
+            StorageReference storageRef = storage.getReference();
+
+
+
+// Create a reference to "mountains.jpg"
+            StorageReference profileRef = storageRef.child("profile.jpg");
+
+// Create a reference to 'images/mountains.jpg'
+            StorageReference profileImagesRef = storageRef.child("images/profile.jpg");
+
+// While the file names are the same, the references point to different files
+            profileRef.getName().equals(profileImagesRef.getName());    // true
+            profileRef.getPath().equals(profileImagesRef.getPath());    // false
+
+            // Get the data from an ImageView as bytes
+            profileImage.setDrawingCacheEnabled(true);
+            profileImage.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = profileRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                }
+            });
+
+        }
+    }
+
+    public static Bitmap getCircularBitmap(Bitmap bitmap) {
+        Bitmap output;
+
+        if (bitmap.getWidth() > bitmap.getHeight()) {
+            output = Bitmap.createBitmap(bitmap.getHeight(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        } else {
+            output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getWidth(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        float r = 0;
+
+        if (bitmap.getWidth() > bitmap.getHeight()) {
+            r = bitmap.getHeight() / 2;
+        } else {
+            r = bitmap.getWidth() / 2;
+        }
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawCircle(r, r, r, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        return output;
     }
 }

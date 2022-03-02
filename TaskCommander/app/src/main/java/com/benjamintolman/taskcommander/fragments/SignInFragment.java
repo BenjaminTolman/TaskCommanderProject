@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Locale;
 
@@ -29,12 +31,17 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "SignInFragment";
 
+
+
     EditText emailInput;
-    EditText passwordIntput;
+    EditText passwordInput;
     Button signInButton;
     TextView registerButton;
 
     boolean logInSuccess = false;
+
+    private StorageReference mStorageRef;
+
 
     public static SignInFragment newInstance() {
 
@@ -51,11 +58,14 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.login_layout, container, false);
 
         emailInput = view.findViewById(R.id.login_email_edittext);
-        passwordIntput = view.findViewById(R.id.login_password_edittext);
+        passwordInput = view.findViewById(R.id.login_password_edittext);
         signInButton = view.findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
         registerButton = view.findViewById(R.id.register_link);
         registerButton.setOnClickListener(this);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
 
         Activity activity = getActivity();
         activity.setTitle(R.string.sign_in);
@@ -68,11 +78,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
 
         if (view.getId() == signInButton.getId()) {
-
-            //Todo these need to be validated
-            //todo this can be greatly improved if we save the company ID to local options
-
-            //FirestoreUtility.signIn(emailInput.getText().toString(), passwordIntput.getText().toString());
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -87,7 +92,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
                                     if (document.getId().equals(emailInput.getText().toString().toLowerCase(Locale.ROOT))) {
                                         String passString = document.get("password").toString();
-                                        if (passString.equals(passwordIntput.getText().toString())) {
+                                        if (passString.equals(passwordInput.getText().toString())) {
 
                                             //This becomes the user in MainActivity.
                                             Employee thisEmployee = new Employee(
