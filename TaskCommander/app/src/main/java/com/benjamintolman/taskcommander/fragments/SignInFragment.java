@@ -1,6 +1,7 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -24,7 +26,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
+import java.net.URL;
 import java.util.Locale;
 
 public class SignInFragment extends Fragment implements View.OnClickListener {
@@ -38,10 +42,14 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     Button signInButton;
     TextView registerButton;
 
+    ImageView logo;
+
     boolean logInSuccess = false;
 
-    private StorageReference mStorageRef;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
+
+    private StorageReference mStorageRef;
 
     public static SignInFragment newInstance() {
 
@@ -64,8 +72,12 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         registerButton = view.findViewById(R.id.register_link);
         registerButton.setOnClickListener(this);
 
+        logo = view.findViewById(R.id.registration_profileimage);
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
+        //todo can we use picasso go get the profile images?
+        // or get them via https?
 
         Activity activity = getActivity();
         activity.setTitle(R.string.sign_in);
@@ -78,6 +90,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
 
         if (view.getId() == signInButton.getId()) {
+
+            getProfileImage();
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -183,6 +197,22 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                     }
 
                 });
+    }
+
+    private void getProfileImage() {
+
+        //StorageReference storageRef = storage.getReference();
+
+// Create a reference to a file from a Cloud Storage URI
+        //StorageReference gsReference = storage.getReferenceFromUrl("gs://bucket/images/profile.jpg");
+
+        //todo figure this out.
+        //gsReference.getDownloadUrl();
+
+        String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
+        Picasso.with(getContext()).load(imageUri).into(logo);
+        //https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e
+
     }
 }
 

@@ -32,6 +32,7 @@ import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
+import com.benjamintolman.taskcommander.Utils.BitmapUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -300,7 +301,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         {
             Bitmap photo = (Bitmap) imageData.getExtras().get("data");
 
-            Bitmap circleBitmap = getCircularBitmap(photo);
+            Bitmap circleBitmap = BitmapUtility.getCircularBitmap(photo);
             profileImage.setImageBitmap(circleBitmap);
 
             //todo upload image to firestore
@@ -310,13 +311,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
 
 
-// Create a reference to "mountains.jpg"
-            StorageReference profileRef = storageRef.child("profile.jpg");
+            // Create a reference to "mountains.jpg"
+            StorageReference profileRef = storageRef.child("profile2.jpg");
 
-// Create a reference to 'images/mountains.jpg'
-            StorageReference profileImagesRef = storageRef.child("images/profile.jpg");
+            // Create a reference to 'images/mountains.jpg'
+            StorageReference profileImagesRef = storageRef.child("images/profile2.jpg");
 
-// While the file names are the same, the references point to different files
+            // While the file names are the same, the references point to different files
             profileRef.getName().equals(profileImagesRef.getName());    // true
             profileRef.getPath().equals(profileImagesRef.getPath());    // false
 
@@ -341,39 +342,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                     // ...
                 }
             });
-
         }
-    }
-
-    public static Bitmap getCircularBitmap(Bitmap bitmap) {
-        Bitmap output;
-
-        if (bitmap.getWidth() > bitmap.getHeight()) {
-            output = Bitmap.createBitmap(bitmap.getHeight(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        } else {
-            output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getWidth(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-        float r = 0;
-
-        if (bitmap.getWidth() > bitmap.getHeight()) {
-            r = bitmap.getHeight() / 2;
-        } else {
-            r = bitmap.getWidth() / 2;
-        }
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawCircle(r, r, r, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-        return output;
     }
 }
