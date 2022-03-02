@@ -86,7 +86,7 @@ public class JobsAdapter extends BaseAdapter {
             jobName.setText(job.getJobTitle());
             jobAddress.setText(job.getJobAddress());
             jobAssigned.setText(job.getEmployeeAssigned());
-            jobDateTime.setText(job.getJobDate() + " " + job.getJobTime());
+            jobDateTime.setText("Date: " + job.getJobDate() + " Time: " + job.getJobTime());
             //bookName.setText(book.getmTitle());
             //String icon = book.getmImageURL();
             //Picasso.get().load(icon).into(image);

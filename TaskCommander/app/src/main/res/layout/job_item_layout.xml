@@ -30,14 +30,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
         android:layout_marginBottom="16dp"
         android:text="Assigned Worker"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/job_item_job_address"
+        app:layout_constraintTop_toBottomOf="@+id/job_item_date_time"
         app:layout_constraintVertical_bias="0.006" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -52,13 +51,12 @@
         android:layout_width="0dp"
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="12dp"
+        android:gravity="left"
         android:text="11/23/22 - 09:55"
-        android:gravity="right"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/job_item_job_address" />
 
     <TextView

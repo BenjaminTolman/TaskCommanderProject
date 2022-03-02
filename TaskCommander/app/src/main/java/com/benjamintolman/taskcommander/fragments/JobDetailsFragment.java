@@ -85,7 +85,6 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
                     JobsFragment.newInstance()
             ).commit();
         }
-
     }
 
 

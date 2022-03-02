@@ -38,7 +38,6 @@ public class Job {
         return String.valueOf(jobHour) + ":" + String.valueOf(jobMin);
     }
 
-
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
     }
@@ -68,7 +67,8 @@ public class Job {
     }
 
     public String getJobDate() {
-        return jobDate;
+
+        return String.valueOf(jobDay) + "/" + String.valueOf(jobMonth) + "/" + String.valueOf(jobYear);
     }
 
     public void setJobDate(String jobDate) {

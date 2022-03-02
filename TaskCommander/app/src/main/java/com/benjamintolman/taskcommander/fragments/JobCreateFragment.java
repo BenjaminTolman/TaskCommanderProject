@@ -176,6 +176,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             if (!jobName.isEmpty()) {
                     if(!ValidationUtility.validateSize(jobName, 30)){
                         Toast.makeText(getContext(), "Job Name greater than 30 characters.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                 }
             else{
@@ -185,7 +186,8 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
             if (!jobAddress.isEmpty()) {
                 if(!ValidationUtility.validateSize(jobAddress, 60)){
-                    Toast.makeText(getContext(), "Job Address greater than 30 characters.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Job Address greater than 60 characters.", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
             }else{
@@ -194,16 +196,11 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             }
 
 
-
-            if (!jobDate.isEmpty()) {
-
-
-            }else{
-                Toast.makeText(getContext(), "Job Date is Empty.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             if (!jobNotes.isEmpty()) {
+                if(!ValidationUtility.validateSize(jobNotes, 240)){
+                    Toast.makeText(getContext(), "Job Notes are greater than 240 characters.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
 
             }else{
@@ -212,7 +209,10 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             }
 
             if (!clientName.isEmpty()) {
-
+                if(!ValidationUtility.validateSize(clientName, 30)){
+                    Toast.makeText(getContext(), "Client Name is greater than 240 characters.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
             }else{
                 Toast.makeText(getContext(), "Client Name is Empty.", Toast.LENGTH_SHORT).show();
@@ -220,7 +220,10 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             }
 
             if (!clientPhone.isEmpty()) {
-
+                if(!ValidationUtility.validatePhone(clientPhone)){
+                    Toast.makeText(getContext(), "Client Phone is not formatted correctly.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
             }else{
                 Toast.makeText(getContext(), "Client Phone is Empty.", Toast.LENGTH_SHORT).show();
@@ -229,7 +232,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
             if (!employeeAssigned.isEmpty()) {
 
-
+                //todo get the employee assigned from the actual fragment instead of Bill Clay.
             }else{
                 Toast.makeText(getContext(), "Employee assigned is Empty.", Toast.LENGTH_SHORT).show();
                 return;
