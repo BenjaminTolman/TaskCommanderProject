@@ -11,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,8 +40,8 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
     EditText jobNameInput;
     EditText jobAddressInput;
-    EditText jobTimeInput;
-    EditText jobDateInput;
+    TimePicker jobTimeInput;
+    DatePicker jobDateInput;
     EditText jobNotesInput;
     EditText clientNameInput;
     EditText clientPhoneInput;
@@ -67,8 +69,8 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         //todo get info from selectors.
         jobNameInput = view.findViewById(R.id.job_creation_name);
         jobAddressInput = view.findViewById(R.id.job_creation_address);
-        //jobTimeInput = view.findViewById(R.id.job_creation_time);
-        //jobDateInput = view.findViewById(R.id.job_creation_date);
+        jobTimeInput = view.findViewById(R.id.job_creation_timepicker);
+        jobDateInput = view.findViewById(R.id.job_creation_date);
         jobNotesInput = view.findViewById(R.id.job_creation_notes);
         clientNameInput = view.findViewById(R.id.job_creation_client_name);
         clientPhoneInput = view.findViewById(R.id.job_creation_phone);
@@ -150,10 +152,20 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             String jobName = jobNameInput.getText().toString();
             String jobAddress = jobAddressInput.getText().toString();
 
+            int jobHour = jobTimeInput.getCurrentHour();
+            int jobMin = jobTimeInput.getCurrentMinute();
 
-            String jobTime = jobTimeInput.getText().toString();
-            String jobDate = jobDateInput.getText().toString();
+            int jobMonth = jobDateInput.getMonth();
+            int jobDay = jobDateInput.getDayOfMonth();
+            int jobYear = jobDateInput.getYear();
 
+
+            Log.d("TIME", String.valueOf(jobHour) + " " + String.valueOf(jobMin));
+
+
+            String jobDate = (String.valueOf(jobDay) + "/" + String.valueOf(jobMonth) + "/" + String.valueOf(jobYear));
+
+            Log.d("DATE", jobDate);
 
             String jobNotes = jobNotesInput.getText().toString();
             String clientName = clientNameInput.getText().toString();
@@ -181,14 +193,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                 return;
             }
 
-
-            if (!jobTime.isEmpty()) {
-                //todo get job time
-
-            }else{
-                Toast.makeText(getContext(), "Job Time is Empty.", Toast.LENGTH_SHORT).show();
-                return;
-            }
 
 
             if (!jobDate.isEmpty()) {
@@ -238,8 +242,11 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             Map<String, Object> job = new HashMap<>();
             job.put("name", jobName);
             job.put("address", jobAddress);
-            job.put("time", jobTime);
-            job.put("date", jobDate);
+            job.put("hour", jobHour);
+            job.put("min", jobMin);
+            job.put("day", jobDay);
+            job.put("month", jobMonth);
+            job.put("year", jobYear);
             job.put("notes", jobNotes);
             job.put("cName", clientName);
             job.put("cPhone", clientPhone);
@@ -260,8 +267,11 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                             Job newJob = new Job(
                                     jobName,
                                     jobAddress,
-                                    jobTime,
-                                    jobDate,
+                                    jobHour,
+                                    jobMin,
+                                    jobDay,
+                                    jobMonth,
+                                    jobYear,
                                     jobNotes,
                                     clientName,
                                     clientPhone,

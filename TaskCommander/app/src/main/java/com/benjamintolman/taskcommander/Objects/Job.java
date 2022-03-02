@@ -4,19 +4,25 @@ public class Job {
 
     private String jobTitle;
     private String jobAddress;
-    private String jobTime;
+    private int jobHour;
+    private int jobMin;
+    private int jobDay;
+    private int jobMonth;
+    private int jobYear;
     private String jobDate;
     private String jobNotes;
     private String clientName;
     private String clientPhone;
     private String employeeAssigned;
 
-
-    public Job(String jobTitle, String jobAddress, String jobTime, String jobDate, String jobNotes, String clientName, String clientPhone, String employeeAssigned) {
+    public Job(String jobTitle, String jobAddress, int jobHour, int jobMin, int jobDay, int jobMonth, int jobYear, String jobNotes, String clientName, String clientPhone, String employeeAssigned) {
         this.jobTitle = jobTitle;
         this.jobAddress = jobAddress;
-        this.jobTime = jobTime;
-        this.jobDate = jobDate;
+        this.jobHour = jobHour;
+        this.jobMin = jobMin;
+        this.jobDay = jobDay;
+        this.jobMonth = jobMonth;
+        this.jobYear = jobYear;
         this.jobNotes = jobNotes;
         this.clientName = clientName;
         this.clientPhone = clientPhone;
@@ -26,6 +32,12 @@ public class Job {
     public String getJobTitle() {
         return jobTitle;
     }
+
+    public String getJobTime(){
+        //todo create the AM/PM CHECK
+        return String.valueOf(jobHour) + ":" + String.valueOf(jobMin);
+    }
+
 
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
@@ -39,12 +51,20 @@ public class Job {
         this.jobAddress = jobAddress;
     }
 
-    public String getJobTime() {
-        return jobTime;
+    public int getJobHour() {
+        return jobHour;
     }
 
-    public void setJobTime(String jobTime) {
-        this.jobTime = jobTime;
+    public void setJobHour(int jobHour) {
+        this.jobHour = jobHour;
+    }
+
+    public int getJobMin() {
+        return jobMin;
+    }
+
+    public void setJobMin(int jobMin) {
+        this.jobMin = jobMin;
     }
 
     public String getJobDate() {

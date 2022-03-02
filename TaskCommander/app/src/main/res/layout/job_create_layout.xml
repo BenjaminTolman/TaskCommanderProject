@@ -44,7 +44,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
             <TimePicker
-                android:id="@+id/timePicker1"
+                android:id="@+id/job_creation_timepicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
@@ -57,7 +57,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
             <DatePicker
-                android:id="@+id/datePicker1"
+                android:id="@+id/job_creation_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
@@ -248,7 +248,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timePicker1" />
+                app:layout_constraintTop_toBottomOf="@+id/job_creation_timepicker" />
 
             <TextView
                 android:id="@+id/textView19"
@@ -260,7 +260,7 @@
                 android:text="Job Notes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/datePicker1" />
+                app:layout_constraintTop_toBottomOf="@+id/job_creation_date" />
 
             <TextView
                 android:id="@+id/textView20"
