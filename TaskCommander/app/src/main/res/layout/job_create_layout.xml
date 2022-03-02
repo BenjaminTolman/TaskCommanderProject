@@ -43,29 +43,28 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
-            <EditText
-                android:id="@+id/job_creation_time"
+            <TimePicker
+                android:id="@+id/timePicker1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="28dp"
-                android:ems="10"
-                android:inputType="textPersonName"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="64dp"
+                android:timePickerMode="spinner"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.21"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
-            <EditText
-                android:id="@+id/job_creation_date"
+            <DatePicker
+                android:id="@+id/datePicker1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="2dp"
-                android:layout_marginEnd="28dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
+                android:layout_marginEnd="64dp"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView18" />
@@ -209,7 +208,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="28dp"
-                android:text="Job Name"
+                android:text="Job Name (30 Character Max)"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_creation_job_info_textview" />
@@ -221,7 +220,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
-                android:text="Job Address"
+                android:text="Job Address (60 Character Max)"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_creation_name" />
@@ -233,7 +232,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
-                android:text="Job Time (00:00 AM)"
+                android:text="Job Time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_creation_address" />
@@ -245,10 +244,11 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
-                android:text="Job Date (11/11/22)"
+                android:text="Job Date"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_creation_time" />
+                app:layout_constraintTop_toBottomOf="@+id/timePicker1" />
 
             <TextView
                 android:id="@+id/textView19"
@@ -260,7 +260,7 @@
                 android:text="Job Notes"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_creation_date" />
+                app:layout_constraintTop_toBottomOf="@+id/datePicker1" />
 
             <TextView
                 android:id="@+id/textView20"

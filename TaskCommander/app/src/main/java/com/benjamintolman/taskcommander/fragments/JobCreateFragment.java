@@ -64,11 +64,11 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
         setHasOptionsMenu(true);
 
-        //todo some of these need to open a selector on top of view.
+        //todo get info from selectors.
         jobNameInput = view.findViewById(R.id.job_creation_name);
         jobAddressInput = view.findViewById(R.id.job_creation_address);
-        jobTimeInput = view.findViewById(R.id.job_creation_time);
-        jobDateInput = view.findViewById(R.id.job_creation_date);
+        //jobTimeInput = view.findViewById(R.id.job_creation_time);
+        //jobDateInput = view.findViewById(R.id.job_creation_date);
         jobNotesInput = view.findViewById(R.id.job_creation_notes);
         clientNameInput = view.findViewById(R.id.job_creation_client_name);
         clientPhoneInput = view.findViewById(R.id.job_creation_phone);
@@ -149,8 +149,12 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             //todo validate these
             String jobName = jobNameInput.getText().toString();
             String jobAddress = jobAddressInput.getText().toString();
+
+
             String jobTime = jobTimeInput.getText().toString();
             String jobDate = jobDateInput.getText().toString();
+
+
             String jobNotes = jobNotesInput.getText().toString();
             String clientName = clientNameInput.getText().toString();
             String clientPhone = clientPhoneInput.getText().toString();
@@ -158,17 +162,19 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
             //todo these are not done yet
             if (!jobName.isEmpty()) {
-
-
+                    if(!ValidationUtility.validateSize(jobName, 30)){
+                        Toast.makeText(getContext(), "Job Name greater than 30 characters.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             else{
                 Toast.makeText(getContext(), "Job Name is Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-
             if (!jobAddress.isEmpty()) {
-
+                if(!ValidationUtility.validateSize(jobAddress, 60)){
+                    Toast.makeText(getContext(), "Job Address greater than 30 characters.", Toast.LENGTH_SHORT).show();
+                }
 
             }else{
                 Toast.makeText(getContext(), "Job Address is Empty.", Toast.LENGTH_SHORT).show();
@@ -177,7 +183,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
 
             if (!jobTime.isEmpty()) {
-
+                //todo get job time
 
             }else{
                 Toast.makeText(getContext(), "Job Time is Empty.", Toast.LENGTH_SHORT).show();

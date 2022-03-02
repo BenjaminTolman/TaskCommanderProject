@@ -95,4 +95,14 @@ public class ValidationUtility {
     }
 
     //todo validate job fields
+
+    public static boolean validateSize(String input, int size){
+
+        if(input.length() <= size){
+
+            return true;
+        }
+
+        return false;
+    }
 }
