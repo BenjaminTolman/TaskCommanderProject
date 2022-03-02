@@ -45,7 +45,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     EditText companyCodeInput;
     Button registerButton;
 
-
     public static RegisterFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -117,7 +116,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 return;
             }
 
-
             name = nameInput.getText().toString();
 
             if(!name.isEmpty()){
@@ -145,7 +143,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             return;
         }
 
-
             phone = phoneInput.getText().toString();
             if(!ValidationUtility.validatePhone(phone)){
                //todo why
@@ -157,7 +154,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             role = spinnerView.getText().toString();
 
             companyCode = companyCodeInput.getText().toString();
-
 
             //set email to all lowercase
             email = email.toLowerCase(Locale.ROOT);
@@ -218,6 +214,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     public void getJobs(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        MainActivity.jobs.clear();
+        
         db.collection("jobs")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -252,9 +250,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
                     }
-
                 });
     }
-
-
 }

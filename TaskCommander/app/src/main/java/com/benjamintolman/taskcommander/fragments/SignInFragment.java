@@ -132,6 +132,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     public void getJobs(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        MainActivity.jobs.clear();
+
         db.collection("jobs")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

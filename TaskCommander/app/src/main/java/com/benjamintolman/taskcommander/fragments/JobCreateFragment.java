@@ -159,41 +159,68 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             //todo these are not done yet
             if (!jobName.isEmpty()) {
 
-                    Toast.makeText(getContext(), "Job Name is Empty.", Toast.LENGTH_SHORT).show();
-                    return;
+
                 }
+            else{
+                Toast.makeText(getContext(), "Job Name is Empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
             if (!jobAddress.isEmpty()) {
 
+
+            }else{
                 Toast.makeText(getContext(), "Job Address is Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+
             if (!jobTime.isEmpty()) {
 
+
+            }else{
                 Toast.makeText(getContext(), "Job Time is Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+
             if (!jobDate.isEmpty()) {
 
+
+            }else{
                 Toast.makeText(getContext(), "Job Date is Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             if (!jobNotes.isEmpty()) {
 
+
+            }else{
                 Toast.makeText(getContext(), "Job Notes are Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             if (!clientName.isEmpty()) {
 
+
+            }else{
                 Toast.makeText(getContext(), "Client Name is Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             if (!clientPhone.isEmpty()) {
 
+
+            }else{
                 Toast.makeText(getContext(), "Client Phone is Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
+
             if (!employeeAssigned.isEmpty()) {
 
+
+            }else{
                 Toast.makeText(getContext(), "Employee assigned is Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
