@@ -1,10 +1,13 @@
 package com.benjamintolman.taskcommander;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.os.Bundle;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.fragments.DashboardFragment;
+import com.benjamintolman.taskcommander.fragments.JobCreateFragment;
 import com.benjamintolman.taskcommander.fragments.JobsFragment;
 import com.benjamintolman.taskcommander.fragments.SignInFragment;
 
@@ -17,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Employee> employees = new ArrayList<Employee>();
 
     public static Employee currentUser;
-    public static Employee selectedEmployee;
+    public static Employee selectedEmployee = null;
 
     public static String currentScreen;
 
@@ -71,6 +74,15 @@ public class MainActivity extends AppCompatActivity {
                     R.id.fragment_holder,
                     JobsFragment.newInstance()
             ).commit();
+        }
+        if(currentScreen.equals("Employee Chooser")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    JobCreateFragment.newInstance()
+            ).commit();
+
+            currentScreen = "Create Job";
+            this.setTitle("Create Job");
         }
     }
 }

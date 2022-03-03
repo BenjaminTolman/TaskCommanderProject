@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.R;
@@ -72,6 +73,8 @@ public class EmployeeAdapter extends BaseAdapter {
 
         if (position <= getCount()) {
             TextView eName = convertView.findViewById(R.id.employee_item_name);
+            //todo once we have real employees we can get the images in here.
+
 
             //ImageView image = convertView.findViewById(R.id.imageView);
             eName.setText(employee.getName());

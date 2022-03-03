@@ -10,19 +10,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.benjamintolman.taskcommander.MainActivity;
+import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
+import com.benjamintolman.taskcommander.adapters.EmployeeAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,7 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobCreateFragment extends Fragment implements View.OnClickListener {
+public class JobCreateFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener {
 
     public static final String TAG = "JobCreationFragment";
 
@@ -45,9 +51,11 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     EditText jobNotesInput;
     EditText clientNameInput;
     EditText clientPhoneInput;
-    EditText employeeAssignment;
+    Button employeeAssignment;
     Button saveButton;
     Button cancelButton;
+
+    ListView employeeList;
 
     public static JobCreateFragment newInstance() {
 
@@ -74,8 +82,15 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         jobNotesInput = view.findViewById(R.id.job_creation_notes);
         clientNameInput = view.findViewById(R.id.job_creation_client_name);
         clientPhoneInput = view.findViewById(R.id.job_creation_phone);
-        employeeAssignment = view.findViewById(R.id.job_creation_assignment);
+        employeeAssignment = view.findViewById(R.id.job_create_layout_assigned_button);
         employeeAssignment.setOnClickListener(this);
+
+        employeeList = view.findViewById(R.id.job_creation_employee_list);
+        MainActivity.employees.add(new Employee("this@email","Bill Clay", "password11", "1234567890", "Employee", "companycode"));
+        EmployeeAdapter employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());
+
+        employeeList.setAdapter(employeeAdapter);
+        employeeList.setOnItemClickListener(this);
 
         saveButton = view.findViewById(R.id.job_creation_save_button);
         saveButton.setOnClickListener(this);
@@ -86,23 +101,20 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         activity.setTitle("Create Job");
         MainActivity.currentScreen = "Create Job";
 
+        if(MainActivity.selectedEmployee != null){
+            Log.d(MainActivity.selectedEmployee.getName().toString(), "ASSIGNED");
+            employeeAssignment.setText(MainActivity.selectedEmployee.getName());
+        }else{
+            employeeAssignment.setText("Unassigned");
+        }
+
         return view;
     }
+
 
     @Override
     public void onClick(View view) {
 
-        if (view.getId() == employeeAssignment.getId()) {
-            Log.d("employee Assignment", "CLICKED");
-
-            //todo add to backstack and deal with that.
-            getParentFragmentManager().beginTransaction().replace(
-                    R.id.fragment_holder,
-                    EmployeeChooserFragment.newInstance()
-            ).commit();
-
-            return;
-        }
 
         if (view.getId() == saveButton.getId()) {
             saveJob();
@@ -170,7 +182,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             String jobNotes = jobNotesInput.getText().toString();
             String clientName = clientNameInput.getText().toString();
             String clientPhone = clientPhoneInput.getText().toString();
-            String employeeAssigned = "Bill Clay";
+            String employeeAssigned = employeeAssignment.getText().toString();
 
             //todo these are not done yet
             if (!jobName.isEmpty()) {
@@ -238,7 +250,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                 return;
             }
 
-            //todo this should be getting a company ID and an Employee ID from the selected employee and the current manager.
+            //todo employee assigned needs name and email.
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             // Create a new user with a first and last name
 
@@ -256,8 +268,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             job.put("companycode", MainActivity.currentUser.getCompanyCode());
             job.put("assigned", employeeAssigned);
             //this should be an ID not whatever we have
-
-            //todo adjust this, better way to track job
 
             //db.collection(companyCode).document("users").collection("list").document(email).set(user)
             db.collection("jobs").document(jobName).set(job)
@@ -296,4 +306,17 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                         }
                     });
         }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Employee clickedEmployee = MainActivity.employees.get(i);
+        MainActivity.selectedEmployee = clickedEmployee;
+
+        if(MainActivity.selectedEmployee != null){
+            Log.d(MainActivity.selectedEmployee.getName().toString(), "ASSIGNED");
+            employeeAssignment.setText(MainActivity.selectedEmployee.getName());
+        }else{
+            employeeAssignment.setText("Unassigned");
+        }
     }
+}

@@ -21,7 +21,7 @@ import com.benjamintolman.taskcommander.adapters.EmployeeAdapter;
 
 public class EmployeeChooserFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
-    public static final String TAG = "JobsFragment";
+    public static final String TAG = "EmployeeChooserFragment";
 
     //todo is this a manager? Does it even matter here? If he is, show all jobs, if not show the assigned jobs.
 
@@ -56,6 +56,8 @@ public class EmployeeChooserFragment extends Fragment implements View.OnClickLis
 
         Activity activity = getActivity();
         activity.setTitle("Employee Chooser");
+
+        MainActivity.currentScreen = ("Employee Chooser");
 
         return view;
     }
@@ -104,8 +106,10 @@ public class EmployeeChooserFragment extends Fragment implements View.OnClickLis
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         //todo instead of name we want the email so we can go ahead and do that.
+
         Employee clickedEmployee = MainActivity.employees.get(i);
-        Log.d("Employee CLICKED ", clickedEmployee.getName());
+        MainActivity.selectedEmployee = clickedEmployee;
+        getParentFragmentManager().popBackStack();
     }
 
     @Override
