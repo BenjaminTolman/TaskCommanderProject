@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +25,15 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -41,6 +48,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     Button cancelButton;
     Button updateButton;
     Button deleteButton;
+    ImageView profileImage;
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference mStorageRef;
 
 
     public static ProfileFragment newInstance() {
@@ -70,6 +81,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         updateButton.setOnClickListener(this);
         deleteButton = view.findViewById(R.id.profile_update_delete_button);
         deleteButton.setOnClickListener(this);
+        profileImage = view.findViewById(R.id.profile_profileimage);
 
         //Set these blocks to the correct values from current employee
         emailInput.setText(MainActivity.currentUser.getEmail());
@@ -78,6 +90,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         phoneInput.setText(MainActivity.currentUser.getPhone());
 
         roleSpinner = view.findViewById(R.id.profile_role_spinner);
+
+        //Firestore
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + MainActivity.currentUser.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
+
+
+        //Picasso.with(getContext()).load(imageUri).into(profileImage);
+        int radius = 100;
+        int margin = 5;
+        Transformation transformation = new RoundedCornersTransformation(radius, margin);
+        Picasso.get().load(imageUri)
+                .transform(transformation).into((profileImage));
+
 
         //Create and ArrayAdapter using the string array in strings and a default spinner layout.
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.roles, android.R.layout.simple_spinner_item);

@@ -19,7 +19,7 @@ public class BitmapUtility {
 
         Canvas canvas = new Canvas(output);
 
-        final int color = 0xff424242;
+        final int color = 0xFF000000;
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 
@@ -32,7 +32,7 @@ public class BitmapUtility {
         }
 
         paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawARGB(0, 255, 255, 255);
         paint.setColor(color);
         canvas.drawCircle(r, r, r, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));

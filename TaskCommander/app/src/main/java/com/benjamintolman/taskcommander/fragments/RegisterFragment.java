@@ -66,6 +66,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     Bitmap profileImageBitmap;
+    boolean imageUploaded = false;
 
     EditText emailInput;
     EditText nameInput;
@@ -100,6 +101,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
         profileImage = view.findViewById(R.id.registration_profileimage);
         profileImage.setOnClickListener(this);
+
+        profileImageBitmap = null;
 
         roleSpinner = view.findViewById(R.id.register_role_spinner);
 
@@ -138,19 +141,16 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         if(view.getId() == registerButton.getId()){
             Log.d(TAG, "Register button tapped");
 
-            //todo validate all fields before sending to firebaseUtil
-
             email = emailInput.getText().toString();
 
             if(!email.isEmpty()){
                 if(!ValidationUtility.isEmailValid(email)){
-                    //todo why
+                    Toast.makeText(getContext(), "Email was not formatted correctly.", Toast.LENGTH_SHORT).show();
                     Log.d("FALSE ", email);
                     return;
                 }
             }else{
-                //email is empty
-                Log.d("FALSE ", "email is empty");
+                Toast.makeText(getContext(), "Email field was empty.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -158,12 +158,12 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
             if(!name.isEmpty()){
                if(!ValidationUtility.validatename(name)){
-                    //todo why
+                   Toast.makeText(getContext(), "Name is more than 30 characters.", Toast.LENGTH_SHORT).show();
                     Log.d("FALSE ", name);
                     return;
                 }
             }else{
-                    //name is empty
+                Toast.makeText(getContext(), "Name field was empty.", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -171,19 +171,19 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             password = passwordInput.getText().toString();
         if(!password.isEmpty()){
             if(!ValidationUtility.validatePassword(password)){
-                //todo why
+                Toast.makeText(getContext(), "Password was not 10 characters.", Toast.LENGTH_SHORT).show();
                 Log.d("FALSE ", password);
                 return;
             }
         }else{
-            //name is empty
+            Toast.makeText(getContext(), "Password field was empty.", Toast.LENGTH_SHORT).show();
             Log.d("FALSE ", "password empty");
             return;
         }
 
             phone = phoneInput.getText().toString();
             if(!ValidationUtility.validatePhone(phone)){
-               //todo why
+                Toast.makeText(getContext(), "Phone number was not formatted correctly.", Toast.LENGTH_SHORT).show();
                 Log.d("FALSE ", phone);
                 return;
             }
@@ -199,6 +199,51 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             //Send over our new fields to create a user in firebase.
             Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode);
              MainActivity.currentUser = thisEmployee;
+
+             if(imageUploaded){
+                 //todo upload image to firestore
+
+                 // Create a Cloud Storage reference from the app
+                 StorageReference storageRef = storage.getReference();
+
+                 // Create a reference to "mountains.jpg"
+                 StorageReference profileRef = storageRef.child(email + "profile.jpg");
+
+                 // Create a reference to 'images/mountains.jpg'
+                 StorageReference profileImagesRef = storageRef.child("images/" + email + "profile.jpg");
+
+                 // While the file names are the same, the references point to different files
+                 profileRef.getName().equals(profileImagesRef.getName());    // true
+                 profileRef.getPath().equals(profileImagesRef.getPath());    // false
+
+                 // Get the data from an ImageView as bytes
+                 profileImage.setDrawingCacheEnabled(true);
+                 profileImage.buildDrawingCache();
+                 Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                 byte[] data = baos.toByteArray();
+
+                 UploadTask uploadTask = profileRef.putBytes(data);
+                 uploadTask.addOnFailureListener(new OnFailureListener() {
+                     @Override
+                     public void onFailure(@NonNull Exception exception) {
+                         // Handle unsuccessful uploads
+                     }
+                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                     @Override
+                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                         imageUploaded = true;
+                         Bitmap circleBitmap = BitmapUtility.getCircularBitmap(profileImageBitmap);
+                         profileImage.setImageBitmap(circleBitmap);
+                     }
+                 });
+             }else{
+                 Toast.makeText(getContext(), "You must have a profile image.", Toast.LENGTH_SHORT).show();
+                 return;
+             }
+
+
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
@@ -236,8 +281,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                     }
                 });
         }
-
-        //todo put a cancel button
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -301,47 +344,19 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         {
             Bitmap photo = (Bitmap) imageData.getExtras().get("data");
 
-            Bitmap circleBitmap = BitmapUtility.getCircularBitmap(photo);
-            profileImage.setImageBitmap(circleBitmap);
+            float aspectRatio = photo.getWidth() /
+                    (float) photo.getHeight();
+            int width = 200;
+            int height = Math.round(width / aspectRatio);
 
-            //todo upload image to firestore
+            photo = Bitmap.createScaledBitmap(
+                    photo, width, height, false);
 
-            // Create a Cloud Storage reference from the app
-            StorageReference storageRef = storage.getReference();
+            photo = BitmapUtility.getCircularBitmap(photo);
 
-
-
-            // Create a reference to "mountains.jpg"
-            StorageReference profileRef = storageRef.child("profile2.jpg");
-
-            // Create a reference to 'images/mountains.jpg'
-            StorageReference profileImagesRef = storageRef.child("images/profile2.jpg");
-
-            // While the file names are the same, the references point to different files
-            profileRef.getName().equals(profileImagesRef.getName());    // true
-            profileRef.getPath().equals(profileImagesRef.getPath());    // false
-
-            // Get the data from an ImageView as bytes
-            profileImage.setDrawingCacheEnabled(true);
-            profileImage.buildDrawingCache();
-            Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-
-            UploadTask uploadTask = profileRef.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
-                }
-            });
+            profileImageBitmap = photo;
+            profileImage.setImageBitmap(photo);
+            imageUploaded = true;
         }
     }
 }

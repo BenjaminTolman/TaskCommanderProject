@@ -35,8 +35,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
     public static final String TAG = "SignInFragment";
 
-
-
     EditText emailInput;
     EditText passwordInput;
     Button signInButton;
@@ -47,7 +45,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     boolean logInSuccess = false;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
-
 
     private StorageReference mStorageRef;
 
@@ -90,8 +87,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
 
         if (view.getId() == signInButton.getId()) {
-
-            getProfileImage();
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -209,9 +204,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         //todo figure this out.
         //gsReference.getDownloadUrl();
 
-        String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
-        Picasso.with(getContext()).load(imageUri).into(logo);
-        //https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e
+
 
     }
 }

@@ -1,15 +1,12 @@
 package com.benjamintolman.taskcommander;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.app.Activity;
 import android.os.Bundle;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.fragments.DashboardFragment;
 import com.benjamintolman.taskcommander.fragments.JobsFragment;
 import com.benjamintolman.taskcommander.fragments.SignInFragment;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
@@ -20,23 +17,17 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Employee> employees = new ArrayList<Employee>();
 
     public static Employee currentUser;
+    public static Employee selectedEmployee;
 
     public static String currentScreen;
 
     public static Job currentJob;
-
-    public static Activity activity;
-    // Create a storage reference from our app
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        activity = this;
 
         MainActivity.currentScreen = "SignIn";
         getSupportFragmentManager().beginTransaction().replace(
