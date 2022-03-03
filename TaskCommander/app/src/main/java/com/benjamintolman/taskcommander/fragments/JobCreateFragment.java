@@ -101,12 +101,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         activity.setTitle("Create Job");
         MainActivity.currentScreen = "Create Job";
 
-        if(MainActivity.selectedEmployee != null){
-            Log.d(MainActivity.selectedEmployee.getName().toString(), "ASSIGNED");
-            employeeAssignment.setText(MainActivity.selectedEmployee.getName());
-        }else{
-            employeeAssignment.setText("Unassigned");
-        }
+        MainActivity.selectedEmployee = null;
 
         return view;
     }
@@ -118,6 +113,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
         if (view.getId() == saveButton.getId()) {
             saveJob();
+        }
 
 
             if (view.getId() == cancelButton.getId()) {
@@ -128,7 +124,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                         DashboardFragment.newInstance()
                 ).commit();
             }
-        }
+
     }
 
         @Override
@@ -184,7 +180,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             String clientPhone = clientPhoneInput.getText().toString();
             String employeeAssigned = employeeAssignment.getText().toString();
 
-            //todo these are not done yet
+
             if (!jobName.isEmpty()) {
                     if(!ValidationUtility.validateSize(jobName, 30)){
                         Toast.makeText(getContext(), "Job Name greater than 30 characters.", Toast.LENGTH_SHORT).show();

@@ -117,9 +117,10 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
                                             MainActivity.currentUser = thisEmployee;
                                             getJobs();
+                                            getUsers();
 
                                         } else {
-
+                                            Toast.makeText(getContext(), "Password or Email was incorrect.", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -194,18 +195,48 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                 });
     }
 
-    private void getProfileImage() {
 
-        //StorageReference storageRef = storage.getReference();
+    public void getUsers(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-// Create a reference to a file from a Cloud Storage URI
-        //StorageReference gsReference = storage.getReferenceFromUrl("gs://bucket/images/profile.jpg");
+        MainActivity.employees.clear();
 
-        //todo figure this out.
-        //gsReference.getDownloadUrl();
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
 
+                                String companyCode = document.get("companycode").toString();
+                                if (companyCode.equals(MainActivity.currentUser.getCompanyCode())) {
 
+                                    //todo create user add user to users
+                                    Log.d("USER FOUND ", companyCode);
+                                    Employee newEmployee = new Employee(
+                                            document.get("email").toString(),
+                                            document.get("name").toString(),
+                                            document.get("password").toString(),
+                                            document.get("phone").toString(),
+                                            document.get("role").toString(),
+                                            document.get("companycode").toString()
+                                    );
 
+                                    MainActivity.employees.add(newEmployee);
+
+                                } else {
+                                    
+                                }
+                            }
+                        }
+                        else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+
+                });
     }
 }
 

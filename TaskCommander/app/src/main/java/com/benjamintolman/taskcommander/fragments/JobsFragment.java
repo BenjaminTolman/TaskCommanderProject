@@ -118,8 +118,6 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
                 JobDetailsFragment.newInstance()
         ).commit();
 
-
-        //todo this needs to open job details with
     }
 
     @Override

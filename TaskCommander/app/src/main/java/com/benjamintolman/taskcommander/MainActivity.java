@@ -80,9 +80,13 @@ public class MainActivity extends AppCompatActivity {
                     R.id.fragment_holder,
                     JobCreateFragment.newInstance()
             ).commit();
+        }
 
-            currentScreen = "Create Job";
-            this.setTitle("Create Job");
+        if(currentScreen.equals("Employees")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    DashboardFragment.newInstance()
+            ).commit();
         }
     }
 }

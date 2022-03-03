@@ -8,10 +8,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class EmployeeAdapter extends BaseAdapter {
 
@@ -20,6 +26,10 @@ public class EmployeeAdapter extends BaseAdapter {
 
     final ArrayList<Employee> mCollection;
     final Context mContext;
+
+    int radius = 100;
+    int margin = 5;
+    Transformation transformation = new RoundedCornersTransformation(radius, margin);
 
     public EmployeeAdapter(ArrayList<Employee> mCollection, Context mContext) {
         this.mCollection = mCollection;
@@ -76,11 +86,12 @@ public class EmployeeAdapter extends BaseAdapter {
             //todo once we have real employees we can get the images in here.
 
 
-            //ImageView image = convertView.findViewById(R.id.imageView);
+            ImageView image = convertView.findViewById(R.id.employee_item_profile_image);
             eName.setText(employee.getName());
 
-            //String icon = thisObject.getmImageURL();
-            //Picasso.get().load(icon).into(image);
+            String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + employee.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
+            Picasso.get().load(imageUri)
+                    .transform(transformation).into((image));
         }
 
         return convertView;

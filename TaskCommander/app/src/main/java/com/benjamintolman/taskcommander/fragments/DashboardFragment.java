@@ -62,7 +62,10 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         }
         if(view.getId() == employeesButton.getId()){
 
-            //todo this should go to the employees screen
+            getParentFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    EmployeesFragment.newInstance()
+            ).commit();
 
         }
         if(view.getId() == profileButton.getId()){
