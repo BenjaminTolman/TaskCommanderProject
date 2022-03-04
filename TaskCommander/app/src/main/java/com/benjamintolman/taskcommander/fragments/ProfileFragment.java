@@ -79,7 +79,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.profile_layout, container, false);
 
-        //todo validate all of these in case we update or update.
         emailInput = view.findViewById(R.id.profile_email_edittext);
         nameInput = view.findViewById(R.id.profile_username_edittext);
         passwordInput = view.findViewById(R.id.profile_password_edittext);
@@ -108,8 +107,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
         String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + MainActivity.currentUser.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
 
-
-        //Picasso.with(getContext()).load(imageUri).into(profileImage);
         int radius = 100;
         int margin = 5;
         Transformation transformation = new RoundedCornersTransformation(radius, margin);
@@ -273,6 +270,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             profileImage.setDrawingCacheEnabled(true);
             profileImage.buildDrawingCache();
             Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+
+            profileImageBitmap = bitmap;
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
@@ -286,7 +286,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    imageUploaded = true;
+
+                   imageUploaded = true;
                     Bitmap circleBitmap = BitmapUtility.getCircularBitmap(profileImageBitmap);
                     profileImage.setImageBitmap(circleBitmap);
                 }
@@ -296,7 +297,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             if(email.equals(MainActivity.currentUser.getEmail())) {
                 Log.d("EMAIL MATCHES ", "it does it does!");
                 MainActivity.currentUser = thisEmployee;
-            }else {
+
+                getParentFragmentManager().beginTransaction().replace(
+                        R.id.fragment_holder,
+                        DashboardFragment.newInstance()
+                ).commit();
+            }
+            else {
+
+                profileRef = storageRef.child(MainActivity.currentUser.getEmail() + "profile.jpg");
+
+                profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // File deleted successfully
+                        Log.d(TAG, "onSuccess: deleted file");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Uh-oh, an error occurred!
+                        Log.d(TAG, "onFailure: did not delete file");
+                    }
+                });
 
                 DocumentReference dr = db.collection("users").document(MainActivity.currentUser.getEmail());
                 dr.delete()
@@ -322,7 +345,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                                 Log.w(TAG, "Error deleting document", e);
                             }
                         });
+
             }
+
         }
 
         if (view.getId() == deleteButton.getId()) {
