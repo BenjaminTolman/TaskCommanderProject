@@ -18,12 +18,16 @@ import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.adapters.EmployeeAdapter;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 
 public class EmployeesFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     public static final String TAG = "EmployeesFragment";
 
     ListView employeeList;
+
 
     public static EmployeesFragment newInstance() {
 
@@ -46,6 +50,7 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener,
         employeeList = view.findViewById(R.id.employees_page_listview);
         employeeList.setAdapter(employeeAdapter);
         employeeList.setOnItemClickListener(this);
+
 
         Activity activity = getActivity();
         activity.setTitle("Employees");
@@ -75,4 +80,6 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener,
                 EmployeeDetailsFragment.newInstance()
         ).commit();
     }
+
+
 }

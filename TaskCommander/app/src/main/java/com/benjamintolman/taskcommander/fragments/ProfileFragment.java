@@ -1,6 +1,9 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.R;
+import com.benjamintolman.taskcommander.Utils.BitmapUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,9 +31,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +44,8 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 public class ProfileFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "ProfileFragment";
+
+    private static final int CAMERA_REQUEST = 1889;
 
     EditText emailInput;
     EditText nameInput;
@@ -48,7 +56,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     Button cancelButton;
     Button updateButton;
     Button deleteButton;
+
+    boolean imageUploaded = false;
     ImageView profileImage;
+    Bitmap profileImageBitmap;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference mStorageRef;
@@ -82,6 +93,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         deleteButton = view.findViewById(R.id.profile_update_delete_button);
         deleteButton.setOnClickListener(this);
         profileImage = view.findViewById(R.id.profile_profileimage);
+        profileImage.setOnClickListener(this);
 
         //Set these blocks to the correct values from current employee
         emailInput.setText(MainActivity.currentUser.getEmail());
@@ -140,7 +152,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         String role = "";
         String companyCode = "";
 
-        if(view.getId() == cancelButton.getId()){
+        if (view.getId() == profileImage.getId()) {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        }
+
+        if (view.getId() == cancelButton.getId()) {
             getParentFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
                     DashboardFragment.newInstance()
@@ -193,8 +210,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                     Toast.makeText(getContext(), "There was a problem with the Phone format.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-            }else
-            {
+            } else {
                 Toast.makeText(getContext(), "Phone number is required.", Toast.LENGTH_SHORT).show();
             }
 
@@ -206,82 +222,81 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
             //Send over our new fields to create a user in firebase.
             //Does email = the same user?
+
+
+            Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode);
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            // Create a new user with a first and last name
+
+            Map<String, Object> user = new HashMap<>();
+            user.put("email", email);
+            user.put("name", name);
+            user.put("password", password);
+            user.put("phone", phone);
+            user.put("role", role);
+            user.put("companycode", companyCode);
+
+            db.collection("users").document(email).set(user)
+
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                            Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                        }
+                    });
+
+
+
+            // Create a Cloud Storage reference from the app
+            StorageReference storageRef = storage.getReference();
+
+            // Create a reference to "mountains.jpg"
+            StorageReference profileRef = storageRef.child(email + "profile.jpg");
+
+            // Create a reference to 'images/mountains.jpg'
+            StorageReference profileImagesRef = storageRef.child("images/" + email + "profile.jpg");
+
+            // While the file names are the same, the references point to different files
+            profileRef.getName().equals(profileImagesRef.getName());    // true
+            profileRef.getPath().equals(profileImagesRef.getPath());    // false
+
+            // Get the data from an ImageView as bytes
+            profileImage.setDrawingCacheEnabled(true);
+            profileImage.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = profileRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imageUploaded = true;
+                    Bitmap circleBitmap = BitmapUtility.getCircularBitmap(profileImageBitmap);
+                    profileImage.setImageBitmap(circleBitmap);
+                }
+            });
+
+            //IF email matches we take this and put it as current user.
             if(email.equals(MainActivity.currentUser.getEmail())) {
                 Log.d("EMAIL MATCHES ", "it does it does!");
-
-                Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode);
                 MainActivity.currentUser = thisEmployee;
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                // Create a new user with a first and last name
-
-                Map<String, Object> user = new HashMap<>();
-                user.put("email", email);
-                user.put("name", name);
-                user.put("password", password);
-                user.put("phone", phone);
-                user.put("role", role);
-                user.put("companycode", companyCode);
-
-                db.collection("users").document(email).set(user)
-
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-
-                                Log.d(TAG, "DocumentSnapshot successfully written!");
-
-                                //After register we go to dashboard
-                                getParentFragmentManager().beginTransaction().replace(
-                                        R.id.fragment_holder,
-                                        DashboardFragment.newInstance()
-                                ).commit();
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error writing document", e);
-                            }
-                        });
-            }
-            //todo Email does not match, so we need to get all the data and create a new user.
-            else{
-                Log.d("EMAIL MATCHES ", "it does it NOT!");
-
-                Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode);
-
-
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                // Create a new user with a first and last name
-
-                Map<String, Object> user = new HashMap<>();
-                user.put("email", email);
-                user.put("name", name);
-                user.put("password", password);
-                user.put("phone", phone);
-                user.put("role", role);
-                user.put("companycode", companyCode);
-
-                db.collection("users").document(email).set(user)
-
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-
-                                Log.d(TAG, "DocumentSnapshot successfully written!");
-
-                                //After register we delete original
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error writing document", e);
-                            }
-                        });
-
+            }else {
 
                 DocumentReference dr = db.collection("users").document(MainActivity.currentUser.getEmail());
                 dr.delete()
@@ -307,20 +322,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                                 Log.w(TAG, "Error deleting document", e);
                             }
                         });
-
-
-
-
-                //todo make sure to get the current user email before this happens so that when we delete
-                //todo it's the correct email and not the one we just made.
             }
-
-
         }
 
         if (view.getId() == deleteButton.getId()) {
 
-            email = emailInput.getText().toString();
+            email = MainActivity.currentUser.getEmail();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             DocumentReference dr = db.collection("users").document(email);
@@ -345,6 +352,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                         }
                     });
 
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageData)
+    {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            Bitmap photo = (Bitmap) imageData.getExtras().get("data");
+
+            float aspectRatio = photo.getWidth() /
+                    (float) photo.getHeight();
+            int width = 200;
+            int height = Math.round(width / aspectRatio);
+
+            photo = Bitmap.createScaledBitmap(
+                    photo, width, height, false);
+
+            photo = BitmapUtility.getCircularBitmap(photo);
+
+            profileImageBitmap = photo;
+            profileImage.setImageBitmap(photo);
+            imageUploaded = true;
         }
     }
 
