@@ -81,12 +81,15 @@ public class JobsAdapter extends BaseAdapter {
             TextView jobAddress = convertView.findViewById(R.id.job_item_job_address);
             TextView jobAssigned = convertView.findViewById(R.id.job_item_employee_assigned);
             TextView jobDateTime = convertView.findViewById(R.id.job_item_date_time);
+            TextView jobStatus = convertView.findViewById(R.id.job_item_job_status_text);
 
             //ImageView image = convertView.findViewById(R.id.imageView);
             jobName.setText(job.getJobTitle());
             jobAddress.setText(job.getJobAddress());
             jobAssigned.setText(job.getEmployeeAssigned());
             jobDateTime.setText("Date: " + job.getJobDate() + " Time: " + job.getJobTime());
+            jobStatus.setText(job.getJobStatus());
+
             //bookName.setText(book.getmTitle());
             //String icon = book.getmImageURL();
             //Picasso.get().load(icon).into(image);

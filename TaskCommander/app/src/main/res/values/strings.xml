@@ -25,4 +25,11 @@
         <item>Completed</item>
 
     </string-array>
+
+    <string-array name="jobstatus">
+    <item>Posted</item>
+    <item>In Progress</item>
+    <item>Complete</item>
+    </string-array>
+
 </resources>

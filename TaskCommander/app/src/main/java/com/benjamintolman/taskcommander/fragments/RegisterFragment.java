@@ -193,6 +193,16 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
             companyCode = companyCodeInput.getText().toString();
 
+        if (!companyCode.isEmpty()) {
+            if (!ValidationUtility.validateCompanyCode(companyCode)) {
+                Toast.makeText(getContext(), "Company code was too long.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else {
+            Toast.makeText(getContext(), "Company Code is required.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
             //set email to all lowercase
             email = email.toLowerCase(Locale.ROOT);
 
@@ -201,7 +211,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
              MainActivity.currentUser = thisEmployee;
 
              if(imageUploaded){
-                 //todo upload image to firestore
 
                  // Create a Cloud Storage reference from the app
                  StorageReference storageRef = storage.getReference();
@@ -242,7 +251,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                  Toast.makeText(getContext(), "You must have a profile image.", Toast.LENGTH_SHORT).show();
                  return;
              }
-
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -320,7 +328,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                                             document.get("notes").toString(),
                                             document.get("cName").toString(),
                                             document.get("cPhone").toString(),
-                                            document.get("assigned").toString()
+                                            document.get("assigned").toString(),
+                                            document.get("status").toString()
                                     );
 
                                     MainActivity.jobs.add(newJob);

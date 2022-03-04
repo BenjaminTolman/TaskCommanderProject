@@ -42,8 +42,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
     public static String assignmentSelection;
 
-    //todo is this a manager? Does it even matter here? Should be a manager if they get to this page.
-
     EditText jobNameInput;
     EditText jobAddressInput;
     TimePicker jobTimeInput;
@@ -167,9 +165,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             int jobDay = jobDateInput.getDayOfMonth();
             int jobYear = jobDateInput.getYear();
 
-
             Log.d("TIME", String.valueOf(jobHour) + " " + String.valueOf(jobMin));
-
 
             String jobDate = (String.valueOf(jobDay) + "/" + String.valueOf(jobMonth) + "/" + String.valueOf(jobYear));
 
@@ -262,7 +258,8 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             job.put("cName", clientName);
             job.put("cPhone", clientPhone);
             job.put("companycode", MainActivity.currentUser.getCompanyCode());
-            job.put("assigned", employeeAssigned);
+            job.put("assigned", employeeAssigned); //todo is MA.selectedUser going to work here?
+            job.put("status", "Posted");
             //this should be an ID not whatever we have
 
             //db.collection(companyCode).document("users").collection("list").document(email).set(user)
@@ -284,7 +281,8 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                                     jobNotes,
                                     clientName,
                                     clientPhone,
-                                    employeeAssigned
+                                    employeeAssigned,
+                                    "Posted"
                             );
 
                             MainActivity.jobs.add(newJob);

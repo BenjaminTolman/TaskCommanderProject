@@ -1,6 +1,7 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -37,6 +38,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -209,6 +211,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                 }
             } else {
                 Toast.makeText(getContext(), "Phone number is required.", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             TextView spinnerView = (TextView) roleSpinner.getSelectedView();
@@ -217,8 +220,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             //todo validate company code.
             companyCode = companyCodeInput.getText().toString();
 
-            //Send over our new fields to create a user in firebase.
-            //Does email = the same user?
+            if (!companyCode.isEmpty()) {
+                if (!ValidationUtility.validateCompanyCode(companyCode)) {
+                    Toast.makeText(getContext(), "Company code was too long.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                Toast.makeText(getContext(), "Company Code is required.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
 
             Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode);
@@ -251,11 +261,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                         }
                     });
 
-
-
             // Create a Cloud Storage reference from the app
             StorageReference storageRef = storage.getReference();
-
             // Create a reference to "mountains.jpg"
             StorageReference profileRef = storageRef.child(email + "profile.jpg");
 
@@ -265,6 +272,25 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             // While the file names are the same, the references point to different files
             profileRef.getName().equals(profileImagesRef.getName());    // true
             profileRef.getPath().equals(profileImagesRef.getPath());    // false
+
+
+
+            profileRef = storageRef.child(MainActivity.currentUser.getEmail() + "profile.jpg");
+
+            profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // File deleted successfully
+                    Log.d(TAG, "onSuccess: deleted file");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Log.d(TAG, "onFailure: did not delete file");
+                }
+            });
+
 
             // Get the data from an ImageView as bytes
             profileImage.setDrawingCacheEnabled(true);
@@ -292,6 +318,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
                     profileImage.setImageBitmap(circleBitmap);
                 }
             });
+
+
 
             //IF email matches we take this and put it as current user.
             if(email.equals(MainActivity.currentUser.getEmail())) {
@@ -433,5 +461,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            dir.delete();
+        } catch (Exception e) { e.printStackTrace();}
     }
 }

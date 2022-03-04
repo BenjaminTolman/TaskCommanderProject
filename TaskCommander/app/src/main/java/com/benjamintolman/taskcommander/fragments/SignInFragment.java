@@ -172,7 +172,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             document.get("notes").toString(),
                                             document.get("cName").toString(),
                                             document.get("cPhone").toString(),
-                                            document.get("assigned").toString()
+                                            document.get("assigned").toString(),
+                                            document.get("status").toString()
                                     );
 
                                     MainActivity.jobs.add(newJob);

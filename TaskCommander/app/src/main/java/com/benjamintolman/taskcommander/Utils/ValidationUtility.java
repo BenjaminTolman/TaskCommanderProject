@@ -69,7 +69,6 @@ public class ValidationUtility {
     public static boolean validatename(String name){
 
             if(name.length() <= 30){
-                //this is 10 digits long.
                 return true;
             }
 
@@ -78,7 +77,6 @@ public class ValidationUtility {
 
     public static boolean validatePassword(String password){
         if(password.length() == 10){
-            //this is 10 digits long.
             return true;
         }
 
@@ -86,8 +84,7 @@ public class ValidationUtility {
     }
 
     public static boolean validateCompanyCode(String companyCode){
-        if(companyCode.length() <= 30){
-            //this is 10 digits long.
+        if(companyCode.length() <= 40){
             return true;
         }
 

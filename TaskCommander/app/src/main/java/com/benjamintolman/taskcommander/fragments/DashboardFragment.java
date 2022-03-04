@@ -10,6 +10,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.R;
 
 public class DashboardFragment extends Fragment implements View.OnClickListener {
@@ -20,6 +22,7 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
     Button jobsButton;
     Button employeesButton;
     Button profileButton;
+    Button signOutButton;
 
 
     public static DashboardFragment newInstance() {
@@ -42,6 +45,12 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
         employeesButton.setOnClickListener(this);
         profileButton = view.findViewById(R.id.dashboard_profile_button);
         profileButton.setOnClickListener(this);
+        signOutButton = view.findViewById(R.id.dashboard_signout_button);
+        signOutButton.setOnClickListener(this);
+
+        if(MainActivity.currentUser.getRole().equals("Employee")){
+            employeesButton.setVisibility(View.GONE);
+        }
 
         //todo should be a check to see if this is a manager as soon as possible and keep the user profile in main activity.
         Activity activity = getActivity();
@@ -73,6 +82,20 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             getParentFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
                     ProfileFragment.newInstance()
+            ).commit();
+        }
+
+        if(view.getId() == signOutButton.getId()){
+
+            MainActivity.currentJob = null;
+            MainActivity.currentUser = null;
+            MainActivity.currentScreen = "Sign In";
+            MainActivity.employees.clear();
+            MainActivity.jobs.clear();
+
+            getParentFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    SignInFragment.newInstance()
             ).commit();
         }
     }
