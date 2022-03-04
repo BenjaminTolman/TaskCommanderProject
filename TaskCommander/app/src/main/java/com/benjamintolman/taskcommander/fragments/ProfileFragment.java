@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -59,7 +60,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
     boolean imageUploaded = false;
     ImageView profileImage;
-    Bitmap profileImageBitmap;
+    Bitmap profileImageBitmap = null;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference mStorageRef;
@@ -112,7 +113,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         Transformation transformation = new RoundedCornersTransformation(radius, margin);
         Picasso.get().load(imageUri)
                 .transform(transformation).into((profileImage));
-
 
         //Create and ArrayAdapter using the string array in strings and a default spinner layout.
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.roles, android.R.layout.simple_spinner_item);
@@ -353,6 +353,27 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         if (view.getId() == deleteButton.getId()) {
 
             email = MainActivity.currentUser.getEmail();
+
+            // Create a Cloud Storage reference from the app
+            StorageReference storageRef = storage.getReference();
+
+            // Create a reference to "mountains.jpg"
+            StorageReference profileRef = storageRef.child(email + "profile.jpg");
+
+            profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    // File deleted successfully
+                    Log.d(TAG, "onSuccess: deleted file");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Uh-oh, an error occurred!
+                    Log.d(TAG, "onFailure: did not delete file");
+                }
+            });
+
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             DocumentReference dr = db.collection("users").document(email);

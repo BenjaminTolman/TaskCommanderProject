@@ -10,6 +10,8 @@ import com.benjamintolman.taskcommander.fragments.DashboardFragment;
 import com.benjamintolman.taskcommander.fragments.JobCreateFragment;
 import com.benjamintolman.taskcommander.fragments.JobsFragment;
 import com.benjamintolman.taskcommander.fragments.SignInFragment;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.setFirestoreSettings(settings);
 
 
         MainActivity.currentScreen = "SignIn";
