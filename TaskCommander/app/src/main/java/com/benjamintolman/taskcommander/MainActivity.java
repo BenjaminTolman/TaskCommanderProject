@@ -8,6 +8,7 @@ import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.fragments.DashboardFragment;
 import com.benjamintolman.taskcommander.fragments.JobCreateFragment;
+import com.benjamintolman.taskcommander.fragments.JobDetailsFragment;
 import com.benjamintolman.taskcommander.fragments.JobsFragment;
 import com.benjamintolman.taskcommander.fragments.SignInFragment;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -94,6 +95,12 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
                     DashboardFragment.newInstance()
+            ).commit();
+        }
+        if(currentScreen.equals("Edit Job")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    JobDetailsFragment.newInstance()
             ).commit();
         }
     }

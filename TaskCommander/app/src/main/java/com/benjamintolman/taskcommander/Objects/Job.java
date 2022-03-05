@@ -86,7 +86,7 @@ public class Job {
     }
 
     public String getJobTime(){
-        //todo create the AM/PM CHECK
+        //todo create the AM/PM CHECK AND send back actual time not military
         return String.valueOf(jobHour) + ":" + String.valueOf(jobMin);
     }
 
@@ -119,7 +119,7 @@ public class Job {
     }
 
     public String getJobDate() {
-
+        //todo create the AM/PM CHECK AND send back actual time not military
         return String.valueOf(jobDay) + "/" + String.valueOf(jobMonth) + "/" + String.valueOf(jobYear);
     }
 

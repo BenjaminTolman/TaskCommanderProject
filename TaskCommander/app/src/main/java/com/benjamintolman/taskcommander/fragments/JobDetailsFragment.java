@@ -3,6 +3,7 @@ package com.benjamintolman.taskcommander.fragments;
 import android.app.Activity;
 import android.opengl.Visibility;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,7 +82,10 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
         jobDateInput.setText(MainActivity.currentJob.getJobDate());
         jobNotesInput.setText(MainActivity.currentJob.getJobNotes());
         clientNameInput.setText(MainActivity.currentJob.getClientName());
-        clientPhoneInput.setText(MainActivity.currentJob.getClientPhone());
+
+        String fPhone = PhoneNumberUtils.formatNumber(MainActivity.currentJob.getClientPhone(), "US"); // output: (202) 555-0739
+        clientPhoneInput.setText(fPhone);
+
         employeeAssignment.setText(MainActivity.currentJob.getEmployeeAssigned());
 
         cancelButton = view.findViewById(R.id.job_details_cancel_button);
@@ -117,8 +121,6 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
         activity.setTitle("Job Details");
         MainActivity.currentScreen = "Job Details";
 
-
-
         return view;
     }
 
@@ -129,6 +131,12 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
             getParentFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
                     JobsFragment.newInstance()
+            ).commit();
+        }
+        if(view.getId() == editButton.getId()){
+            getParentFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    JobEditFragment.newInstance()
             ).commit();
         }
     }

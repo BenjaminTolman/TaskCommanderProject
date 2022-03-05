@@ -66,7 +66,7 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
                 .transform(transformation).into((profileImage));
 
         nameText.setText(MainActivity.selectedEmployee.getName());
-        phoneText.setText(MainActivity.selectedEmployee.getPhone());
+        phoneText.setText(MainActivity.selectedEmployee.getPhoneFormatted());
 
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getChildFragmentManager().beginTransaction().replace(R.id.google_map, mapFragment).commit();

@@ -273,8 +273,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             profileRef.getName().equals(profileImagesRef.getName());    // true
             profileRef.getPath().equals(profileImagesRef.getPath());    // false
 
-
-
             profileRef = storageRef.child(MainActivity.currentUser.getEmail() + "profile.jpg");
 
             profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {

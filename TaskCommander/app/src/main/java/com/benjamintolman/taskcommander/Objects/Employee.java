@@ -1,5 +1,7 @@
 package com.benjamintolman.taskcommander.Objects;
 
+import android.telephony.PhoneNumberUtils;
+
 import java.util.ArrayList;
 
 public class Employee {
@@ -55,6 +57,12 @@ public class Employee {
     public String getPhone() {
         return phone;
     }
+    public String getPhoneFormatted() {
+
+        String fPhone = PhoneNumberUtils.formatNumber(phone, "US"); // output: (202) 555-0739
+        return fPhone;
+    }
+
 
     public void setPhone(String phone) {
         this.phone = phone;
