@@ -83,11 +83,41 @@ public class EmployeeAdapter extends BaseAdapter {
 
         if (position <= getCount()) {
             TextView eName = convertView.findViewById(R.id.employee_item_name);
-            //todo once we have real employees we can get the images in here.
+            TextView busyText = convertView.findViewById(R.id.job_creation_employee_selector_busytext);
 
 
             ImageView image = convertView.findViewById(R.id.employee_item_profile_image);
             eName.setText(employee.getName());
+
+            if(MainActivity.currentScreen.equals("Employees")){
+                busyText.setVisibility(View.GONE);
+            }else{
+                //todo
+                //If this is a jobs edit/create screen check jobs for this employee
+                //If the job is assigned to them, and the current hour of the job
+                //assignment screen is the same then user is busy
+                //todo add in if =/- an hour for hour time.
+
+                busyText.setText("");
+                for (int i = 0; i < MainActivity.jobs.size(); i++) {
+                    if(MainActivity.jobs.get(i).getEmployeeAssigned().equals(employee.getName())){
+
+                        int day = MainActivity.jobs.get(i).getJobDay();
+                        int month = MainActivity.jobs.get(i).getJobMonth();
+                        int year = MainActivity.jobs.get(i).getJobYear();
+                        int hour = MainActivity.jobs.get(i).getJobHour();
+                        int hourPlus = hour += 1;
+                        int hourMinus = hour -= 1;
+
+                        if(hour <= MainActivity.selectorJobHour &&
+                            day == MainActivity.selectorJobDay &&
+                            month == MainActivity.selectorJobMonth &&
+                            year == MainActivity.selectorJobYear ){
+                                busyText.setText("Busy at this time.");
+                        }
+                    }
+                }
+            }
 
             String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + employee.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
             Picasso.get().load(imageUri)

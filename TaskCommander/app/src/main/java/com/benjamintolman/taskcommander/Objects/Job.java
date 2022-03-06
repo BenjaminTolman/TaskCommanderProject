@@ -14,6 +14,7 @@ public class Job {
     private int jobYear;
     private String jobNotes;
     private String clientName;
+    private String companyCode;
 
     public Double getJobLat() {
         return jobLat;
@@ -66,7 +67,9 @@ public class Job {
     private String clientPhone;
     private String employeeAssigned;
 
-    public Job(String jobTitle, String jobAddress, int jobHour, int jobMin, int jobDay, int jobMonth, int jobYear, String jobNotes, String clientName, String clientPhone, String employeeAssigned, String jobStatus) {
+    public Job(String jobTitle, String jobAddress, int jobHour, int jobMin, int jobDay,
+               int jobMonth, int jobYear, String jobNotes, String clientName, String clientPhone,
+               String employeeAssigned, String jobStatus, String companyCode) {
         this.jobTitle = jobTitle;
         this.jobAddress = jobAddress;
         this.jobHour = jobHour;
@@ -79,6 +82,11 @@ public class Job {
         this.clientPhone = clientPhone;
         this.employeeAssigned = employeeAssigned;
         this.jobStatus = jobStatus;
+        this.companyCode = companyCode;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
     }
 
     public String getJobTitle() {
@@ -86,8 +94,24 @@ public class Job {
     }
 
     public String getJobTime(){
-        //todo create the AM/PM CHECK AND send back actual time not military
-        return String.valueOf(jobHour) + ":" + String.valueOf(jobMin);
+
+        int newHour = jobHour;
+        String newMin = String.valueOf(jobMin);
+
+        String ampm = "";
+        if(jobHour > 12){
+            newHour = jobHour - 12;
+            ampm = "PM";
+        }else{
+            ampm = "AM";
+        }
+        if(jobHour == 12){
+            ampm = "PM";
+        }
+        if(jobMin < 10){
+            newMin = "0" + jobMin;
+        }
+        return String.valueOf(newHour) + ":" + String.valueOf(newMin) + " " + ampm;
     }
 
     public void setJobTitle(String jobTitle) {
@@ -119,8 +143,34 @@ public class Job {
     }
 
     public String getJobDate() {
-        //todo create the AM/PM CHECK AND send back actual time not military
-        return String.valueOf(jobDay) + "/" + String.valueOf(jobMonth) + "/" + String.valueOf(jobYear);
+        String jobMonthString = "";
+        switch(jobMonth){
+            case 0: jobMonthString = "Jan";
+            break;
+            case 1: jobMonthString = "Feb";
+                break;
+            case 2: jobMonthString = "Mar";
+                break;
+            case 3: jobMonthString = "Apr";
+                break;
+            case 4: jobMonthString = "May";
+                break;
+            case 5: jobMonthString = "Jun";
+                break;
+            case 6: jobMonthString = "Jul";
+                break;
+            case 7: jobMonthString = "Aug";
+                break;
+            case 8: jobMonthString = "Sep";
+                break;
+            case 9: jobMonthString = "Oct";
+                break;
+            case 10: jobMonthString = "Nov";
+                break;
+            case 11: jobMonthString = "Dec";
+                break;
+        }
+        return String.valueOf(jobMonthString)  + " " + String.valueOf(jobDay) + " " + String.valueOf(jobYear);
     }
 
     public String getJobNotes() {

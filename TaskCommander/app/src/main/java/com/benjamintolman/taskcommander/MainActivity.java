@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.fragments.DashboardFragment;
+import com.benjamintolman.taskcommander.fragments.EmployeeDetailsFragment;
 import com.benjamintolman.taskcommander.fragments.JobCreateFragment;
 import com.benjamintolman.taskcommander.fragments.JobDetailsFragment;
 import com.benjamintolman.taskcommander.fragments.JobsFragment;
@@ -18,16 +19,18 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "Main Activity";
-    //list of Jobs
+
     public static ArrayList<Job> jobs = new ArrayList<Job>();
     public static ArrayList<Employee> employees = new ArrayList<Employee>();
 
     public static Employee currentUser;
     public static Employee selectedEmployee = null;
-
     public static String currentScreen;
-
     public static Job currentJob;
+    public static int selectorJobHour;
+    public static int selectorJobDay;
+    public static int selectorJobMonth;
+    public static int selectorJobYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
                     JobDetailsFragment.newInstance()
+            ).commit();
+        }
+        if(currentScreen.equals("Employee Details")){
+            getSupportFragmentManager().beginTransaction().replace(
+                    R.id.fragment_holder,
+                    EmployeeDetailsFragment.newInstance()
             ).commit();
         }
     }

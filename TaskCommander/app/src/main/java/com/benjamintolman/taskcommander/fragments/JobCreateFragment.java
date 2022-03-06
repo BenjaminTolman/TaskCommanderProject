@@ -2,6 +2,7 @@ package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobCreateFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener {
+public class JobCreateFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener{
 
     public static final String TAG = "JobCreationFragment";
 
@@ -54,6 +55,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     Button cancelButton;
 
     ListView employeeList;
+    EmployeeAdapter employeeAdapter;
 
     public static JobCreateFragment newInstance() {
 
@@ -72,11 +74,16 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
         setHasOptionsMenu(true);
 
-        //todo get info from selectors.
         jobNameInput = view.findViewById(R.id.job_creation_name);
         jobAddressInput = view.findViewById(R.id.job_creation_address);
         jobTimeInput = view.findViewById(R.id.job_creation_timepicker);
+        jobTimeInput.setOnTimeChangedListener(this);
         jobDateInput = view.findViewById(R.id.job_creation_date);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            jobDateInput.setOnDateChangedListener(this);
+        }
+
         jobNotesInput = view.findViewById(R.id.job_creation_notes);
         clientNameInput = view.findViewById(R.id.job_creation_client_name);
         clientPhoneInput = view.findViewById(R.id.job_creation_phone);
@@ -84,8 +91,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         employeeAssignment.setOnClickListener(this);
 
         employeeList = view.findViewById(R.id.job_creation_employee_list);
-        MainActivity.employees.add(new Employee("this@email","Bill Clay", "password11", "1234567890", "Employee", "companycode"));
-        EmployeeAdapter employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());
+        employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());
 
         employeeList.setAdapter(employeeAdapter);
         employeeList.setOnItemClickListener(this);
@@ -104,7 +110,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         return view;
     }
 
-
     @Override
     public void onClick(View view) {
 
@@ -112,7 +117,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         if (view.getId() == saveButton.getId()) {
             saveJob();
         }
-
 
             if (view.getId() == cancelButton.getId()) {
                 Log.d(TAG, "Cancel was clicked");
@@ -154,7 +158,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         }
 
         public void saveJob() {
-            //todo validate these
+
             String jobName = jobNameInput.getText().toString();
             String jobAddress = jobAddressInput.getText().toString();
 
@@ -165,17 +169,10 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             int jobDay = jobDateInput.getDayOfMonth();
             int jobYear = jobDateInput.getYear();
 
-            Log.d("TIME", String.valueOf(jobHour) + " " + String.valueOf(jobMin));
-
-            String jobDate = (String.valueOf(jobDay) + "/" + String.valueOf(jobMonth) + "/" + String.valueOf(jobYear));
-
-            Log.d("DATE", jobDate);
-
             String jobNotes = jobNotesInput.getText().toString();
             String clientName = clientNameInput.getText().toString();
             String clientPhone = clientPhoneInput.getText().toString();
             String employeeAssigned = employeeAssignment.getText().toString();
-
 
             if (!jobName.isEmpty()) {
                     if(!ValidationUtility.validateSize(jobName, 30)){
@@ -236,7 +233,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
             if (!employeeAssigned.isEmpty()) {
 
-                //todo get the employee assigned from the actual fragment instead of Bill Clay.
+
             }else{
                 Toast.makeText(getContext(), "Employee assigned is Empty.", Toast.LENGTH_SHORT).show();
                 return;
@@ -282,7 +279,8 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                                     clientName,
                                     clientPhone,
                                     employeeAssigned,
-                                    "Posted"
+                                    "Posted",
+                                    MainActivity.currentUser.getCompanyCode()
                             );
 
                             MainActivity.jobs.add(newJob);
@@ -312,5 +310,22 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         }else{
             employeeAssignment.setText("Unassigned");
         }
+    }
+
+    @Override
+    public void onTimeChanged(TimePicker timePicker, int i, int i1) {
+        MainActivity.selectorJobHour = i;
+        employeeList.setAdapter(employeeAdapter);
+        employeeAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+        //Year month day
+        MainActivity.selectorJobDay = i2;
+        MainActivity.selectorJobMonth = i1;
+        MainActivity.selectorJobYear = i;
+        employeeList.setAdapter(employeeAdapter);
+        employeeAdapter.notifyDataSetChanged();
     }
 }

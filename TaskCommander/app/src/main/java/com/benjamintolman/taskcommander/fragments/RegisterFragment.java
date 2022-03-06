@@ -315,7 +315,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
                                 String companyCode = document.get("companycode").toString();
-                                if (companyCode.equals("companycode")) {
+                                if (companyCode.equals(MainActivity.currentUser.getCompanyCode())) {
 
                                     Job newJob = new Job(
                                             document.get("name").toString(),
@@ -329,7 +329,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                                             document.get("cName").toString(),
                                             document.get("cPhone").toString(),
                                             document.get("assigned").toString(),
-                                            document.get("status").toString()
+                                            document.get("status").toString(),
+                                            document.get("companycode").toString()
                                     );
 
                                     MainActivity.jobs.add(newJob);

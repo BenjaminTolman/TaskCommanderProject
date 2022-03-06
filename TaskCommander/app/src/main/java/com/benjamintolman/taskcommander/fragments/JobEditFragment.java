@@ -1,6 +1,7 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobEditFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
+public class JobEditFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener {
 
     public static final String TAG = "JobCreationFragment";
 
@@ -56,6 +57,7 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     Button deleteButton;
 
     ListView employeeList;
+    EmployeeAdapter employeeAdapter;
 
     boolean jobStatusBool = false;
     Spinner jobStatus;
@@ -80,7 +82,12 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
         jobNameInput = view.findViewById(R.id.job_edit_name);
         jobAddressInput = view.findViewById(R.id.job_edit_address);
         jobTimeInput = view.findViewById(R.id.job_edit_timepicker);
+        jobTimeInput.setOnTimeChangedListener(this);
         jobDateInput = view.findViewById(R.id.job_edit_date);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            jobDateInput.setOnDateChangedListener(this);
+        }
+
         jobNotesInput = view.findViewById(R.id.job_edit_notes);
         clientNameInput = view.findViewById(R.id.job_edit_client_name);
         clientPhoneInput = view.findViewById(R.id.job_edit_phone);
@@ -88,7 +95,8 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
         employeeAssignment.setOnClickListener(this);
 
         employeeList = view.findViewById(R.id.job_edit_employee_list);
-        EmployeeAdapter employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());
+        employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());
+
 
         employeeList.setAdapter(employeeAdapter);
         employeeList.setOnItemClickListener(this);
@@ -210,12 +218,6 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
             int jobDay = jobDateInput.getDayOfMonth();
             int jobYear = jobDateInput.getYear();
 
-            Log.d("TIME", String.valueOf(jobHour) + " " + String.valueOf(jobMin));
-
-            String jobDate = (String.valueOf(jobDay) + "/" + String.valueOf(jobMonth) + "/" + String.valueOf(jobYear));
-
-            Log.d("DATE", jobDate);
-
             String jobNotes = jobNotesInput.getText().toString();
             String clientName = clientNameInput.getText().toString();
             String clientPhone = clientPhoneInput.getText().toString();
@@ -303,7 +305,8 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                         clientName,
                         clientPhone,
                         employeeAssigned,
-                        MainActivity.currentJob.getJobStatus()
+                        MainActivity.currentJob.getJobStatus(),
+                        MainActivity.currentUser.getCompanyCode()
                 );
 
 
@@ -347,7 +350,7 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                 job.put("cName", clientName);
                 job.put("cPhone", clientPhone);
                 job.put("companycode", MainActivity.currentUser.getCompanyCode());
-                job.put("assigned", MainActivity.currentUser.getName());
+                job.put("assigned", MainActivity.selectedEmployee.getName());
                 job.put("status", MainActivity.currentJob.getJobStatus());
 
 
@@ -434,5 +437,22 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
+    }
+
+    @Override
+    public void onTimeChanged(TimePicker timePicker, int i, int i1) {
+        MainActivity.selectorJobHour = i;
+        employeeList.setAdapter(employeeAdapter);
+        employeeAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+        //Year month day
+        MainActivity.selectorJobDay = i2;
+        MainActivity.selectorJobMonth = i1;
+        MainActivity.selectorJobYear = i;
+        employeeList.setAdapter(employeeAdapter);
+        employeeAdapter.notifyDataSetChanged();
     }
 }
