@@ -21,8 +21,10 @@
     </string-array>
 
     <string-array name="jobfilter">
-        <item>Date Added</item>
-        <item>Completed</item>
+        <item>Date Ascending</item>
+        <item>Date Descending</item>
+        <item>Status Ascending</item>
+        <item>Status Descending</item>
 
     </string-array>
 

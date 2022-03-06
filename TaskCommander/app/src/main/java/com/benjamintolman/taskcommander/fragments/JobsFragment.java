@@ -2,6 +2,7 @@ package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Job;
@@ -30,6 +32,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class JobsFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
@@ -38,7 +42,10 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
     //todo is this a manager? If this is, show all jobs, if not show the assigned jobs.
 
     ListView jobsList;
+    boolean filterSpinnerBool;
     Spinner filterSpinner;
+    JobsAdapter jobsAdapter;
+
 
     ArrayList<Job> jobsFragmentJobs = new ArrayList<>();
 
@@ -82,14 +89,14 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
 
         jobsList = view.findViewById(R.id.jobs_listview);
 
-        JobsAdapter jobsAdapter = new JobsAdapter(jobsFragmentJobs,getContext());
+        jobsAdapter = new JobsAdapter(jobsFragmentJobs,getContext());
 
         jobsList.setAdapter(jobsAdapter);
         jobsList.setOnItemClickListener(this);
 
-        filterSpinner = view.findViewById(R.id.jobs_list_filter_spinner);
 
-        //Create and ArrayAdapter using the string array in strings and a default spinner layout.
+        filterSpinnerBool = false;
+        filterSpinner = view.findViewById(R.id.jobs_list_filter_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.jobfilter, android.R.layout.simple_spinner_item);
         //Specify the layout to use when the list of choices appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -98,6 +105,7 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
         filterSpinner.setAdapter(adapter);
         filterSpinner.setSelection(0,false);
         filterSpinner.setOnItemSelectedListener(this);
+
 
         Activity activity = getActivity();
         activity.setTitle("Jobs");
@@ -155,10 +163,30 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+        String sortBy = filterSpinner.getSelectedItem().toString();
+
+        if(sortBy.equals("Status Ascending")){
+            Collections.sort(jobsFragmentJobs, Job.jobStatusCompare);
+        }
+        if(sortBy.equals("Status Descending")){
+            Collections.sort(jobsFragmentJobs, Job.jobStatusCompareD);
+        }
+        if(sortBy.equals("Date Descending")){
+            Collections.sort(jobsFragmentJobs, Job.compareDateDescending);
+        }
+        if(sortBy.equals("Date Ascending")){
+            Collections.sort(jobsFragmentJobs, Job.compareDateAscending);
+        }
+
+
+        jobsList.setAdapter(jobsAdapter);
+        jobsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
+
 }

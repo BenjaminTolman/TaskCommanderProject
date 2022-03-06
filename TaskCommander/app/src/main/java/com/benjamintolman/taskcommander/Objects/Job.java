@@ -1,6 +1,8 @@
 package com.benjamintolman.taskcommander.Objects;
 
-public class Job {
+import java.util.Comparator;
+
+public class Job{
 
     private String jobTitle;
     private String jobAddress;
@@ -204,4 +206,72 @@ public class Job {
     public void setEmployeeAssigned(String employeeAssigned) {
         this.employeeAssigned = employeeAssigned;
     }
+
+    public static Comparator<Job> jobStatusCompare = new Comparator<Job>() {
+
+        @Override
+        public int compare(Job job, Job t1) {
+
+            String status1
+                    = job.getJobStatus().toUpperCase();
+            String status2
+                    = t1.getJobStatus().toUpperCase();
+
+            // ascending order
+            return status1.compareTo(
+                    status2);
+        }
+
+    };
+    public static Comparator<Job> jobStatusCompareD = new Comparator<Job>() {
+
+        @Override
+        public int compare(Job job, Job t1) {
+
+            String status1
+                    = job.getJobStatus().toUpperCase();
+            String status2
+                    = t1.getJobStatus().toUpperCase();
+
+            // ascending order
+            return status2.compareTo(
+                    status1);
+        }
+
+    };
+
+    public static Comparator<Job> compareDateDescending = new Comparator<Job>() {
+
+        @Override
+        public int compare(Job job, Job t1) {
+
+            String date1
+                    = job.getJobDate();
+            String date2
+                    = t1.getJobDate();
+
+            // ascending order
+            return date2.compareTo(
+                    date1);
+        }
+
+    };
+
+    public static Comparator<Job> compareDateAscending = new Comparator<Job>() {
+
+        @Override
+        public int compare(Job job, Job t1) {
+
+            String date1
+                    = job.getJobDate();
+            String date2
+                    = t1.getJobDate();
+
+            // ascending order
+            return date1.compareTo(
+                    date2);
+        }
+
+    };
+
 }
