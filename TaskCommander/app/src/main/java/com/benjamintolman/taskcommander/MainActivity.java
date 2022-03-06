@@ -8,6 +8,7 @@ import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.fragments.DashboardFragment;
 import com.benjamintolman.taskcommander.fragments.EmployeeDetailsFragment;
+import com.benjamintolman.taskcommander.fragments.EmployeesFragment;
 import com.benjamintolman.taskcommander.fragments.JobCreateFragment;
 import com.benjamintolman.taskcommander.fragments.JobDetailsFragment;
 import com.benjamintolman.taskcommander.fragments.JobsFragment;
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentScreen.equals("Employee Details")){
             getSupportFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
-                    EmployeeDetailsFragment.newInstance()
+                    EmployeesFragment.newInstance()
             ).commit();
         }
     }

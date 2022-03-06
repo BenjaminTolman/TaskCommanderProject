@@ -336,7 +336,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                                     MainActivity.jobs.add(newJob);
 
                                 } else {
-                                    Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();
+
                                 }
                             }
                         }

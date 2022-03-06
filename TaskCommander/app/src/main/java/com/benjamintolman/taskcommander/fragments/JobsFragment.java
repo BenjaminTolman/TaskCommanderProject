@@ -29,6 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+
 public class JobsFragment extends Fragment implements  AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "JobsFragment";
@@ -37,6 +39,8 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
 
     ListView jobsList;
     Spinner filterSpinner;
+
+    ArrayList<Job> jobsFragmentJobs = new ArrayList<>();
 
     public static JobsFragment newInstance() {
 
@@ -47,6 +51,7 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
         return fragment;
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,71 +60,29 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
 
         setHasOptionsMenu(true);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        for (int i = 0; i < MainActivity.jobs.size(); i++) {
+            jobsFragmentJobs.add(MainActivity.jobs.get(i));
+        }
 
-        //MainActivity.jobs.clear();
 
-//        db.collection("jobs")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d(TAG, document.getId() + " => " + document.getData());
-//
-//                                String companyCode = document.get("companycode").toString();
-//                                if (companyCode.equals("companycode")) {
-//
-//                                    Job newJob = new Job(
-//                                            document.get("name").toString(),
-//                                            document.get("address").toString(),
-//                                            Integer.valueOf(document.get("hour").toString()),
-//                                            Integer.valueOf(document.get("min").toString()),
-//                                            Integer.valueOf(document.get("day").toString()),
-//                                            Integer.valueOf(document.get("month").toString()),
-//                                            Integer.valueOf(document.get("year").toString()),
-//                                            document.get("notes").toString(),
-//                                            document.get("cName").toString(),
-//                                            document.get("cPhone").toString(),
-//                                            document.get("assigned").toString(),
-//                                            document.get("status").toString(),
-//                                            document.get("companycode").toString()
-//                                    );
-//
-//                                    MainActivity.jobs.add(newJob);
-//
-//                                } else {
-//                                    Toast.makeText(getContext(), "There was a problem with log in", Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        }
-//                        else {
-//                            Log.w(TAG, "Error getting documents.", task.getException());
-//                        }
-//                    }
-//
-//                });
-//
-//
-//            for (int i = 0; i < MainActivity.jobs.size(); i++) {
-//                if(MainActivity.jobs.get(i).getCompanyCode().equals(MainActivity.currentUser.getCompanyCode())){
-//                    MainActivity.jobs.remove(i);
-//                }
-//            }
+            for (int i = 0; i < jobsFragmentJobs.size(); i++) {
+                if(!jobsFragmentJobs.get(i).getCompanyCode().equals(MainActivity.currentUser.getCompanyCode())){
+                    jobsFragmentJobs.remove(i);
+                }
+            }
 
         //Remove jobs that are not for this employee if this is an employee.
         if(MainActivity.currentUser.getRole().equals("Employee")) {
-            for (int i = 0; i < MainActivity.jobs.size(); i++) {
-                if(!MainActivity.jobs.get(i).getEmployeeAssigned().equals(MainActivity.currentUser.getName())){
-                    MainActivity.jobs.remove(i);
+            for (int i = 0; i < jobsFragmentJobs.size(); i++) {
+                if(!jobsFragmentJobs.get(i).getEmployeeAssigned().equals(MainActivity.currentUser.getName())){
+                    jobsFragmentJobs.remove(i);
                 }
             }
         }
 
         jobsList = view.findViewById(R.id.jobs_listview);
 
-        JobsAdapter jobsAdapter = new JobsAdapter(MainActivity.jobs,getContext());
+        JobsAdapter jobsAdapter = new JobsAdapter(jobsFragmentJobs,getContext());
 
         jobsList.setAdapter(jobsAdapter);
         jobsList.setOnItemClickListener(this);
@@ -178,7 +141,7 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-        Job thisJob = MainActivity.jobs.get(i);
+        Job thisJob = jobsFragmentJobs.get(i);
 
         MainActivity.currentJob = thisJob;
 
