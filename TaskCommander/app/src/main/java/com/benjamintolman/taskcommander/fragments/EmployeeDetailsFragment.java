@@ -9,6 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,14 +24,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallback, AdapterView.OnItemClickListener {
+public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallback, AdapterView.OnItemClickListener, GoogleMap.InfoWindowAdapter {
 
-    public static final String TAG = "EmployeesFragment";
+    public static final String TAG = "EmployeeDetailsFragment";
 
     private GoogleMap mMap;
 
@@ -56,7 +60,7 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-                //todo replace this with employee info.
+
         View view = inflater.inflate(R.layout.employee_details_layout, container, false);
 
         profileImage = view.findViewById(R.id.employee_details_profileimage);
@@ -96,6 +100,8 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(this);
+        addMapMarker();
         zoomInCamera();
     }
 
@@ -104,14 +110,57 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
             return;
         }
 
-        LatLng newLoc = new LatLng(mapLat, mapLon);
-        CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 10);
+        if(MainActivity.currentUser != null){
+            if(MainActivity.currentUser.getLat() != 0 && MainActivity.currentUser.getLon() != 0){
+                LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
+                CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 10);
+                mMap.moveCamera(cameraMovement);
+                return;
+            }
+            Toast.makeText(getContext(), "This employee does not have Location Data.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
+        CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 5);
+
+
         mMap.moveCamera(cameraMovement);
 
+    }
+
+    private void addMapMarker() {
+        if(mMap == null){
+            return;
+        }else{
+            MarkerOptions options = new MarkerOptions();
+            options.title(MainActivity.currentUser.getName());
+            //options.snippet("MDV Offices");
+            LatLng employeeLocation = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
+            options.position(employeeLocation);
+            mMap.addMarker(options);
+        }
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+    }
+
+    @Nullable
+    @Override
+    public View getInfoContents(@NonNull Marker marker) {
+        View contents = LayoutInflater.from(getActivity())
+                .inflate(R.layout.employee_info_window, null);
+        ((TextView) contents.findViewById(R.id.title)).setText(marker.getTitle());
+        //((TextView) contents.findViewById(R.id.snippet)).setText(marker.getSnippet());
+
+        return contents;
+    }
+
+    @Nullable
+    @Override
+    public View getInfoWindow(@NonNull Marker marker) {
+        return null;
     }
 }

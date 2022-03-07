@@ -23,8 +23,6 @@ public class EmployeeChooserFragment extends Fragment implements View.OnClickLis
 
     public static final String TAG = "EmployeeChooserFragment";
 
-    //todo is this a manager? Does it even matter here? If he is, show all jobs, if not show the assigned jobs.
-
     ListView employeeList;
 
     public static EmployeeChooserFragment newInstance() {
@@ -46,9 +44,6 @@ public class EmployeeChooserFragment extends Fragment implements View.OnClickLis
 
         employeeList = view.findViewById(R.id.employee_chooser_listview);
 
-        //todo remove this for actual employees.
-        MainActivity.employees.add(new Employee("this@email","Bill Clay", "password11", "1234567890", "Employee", "companycode"));
-
         EmployeeAdapter employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());
 
         employeeList.setAdapter(employeeAdapter);
@@ -60,14 +55,6 @@ public class EmployeeChooserFragment extends Fragment implements View.OnClickLis
         MainActivity.currentScreen = ("Employee Chooser");
 
         return view;
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        //super.onCreateOptionsMenu(menu, inflater);
-        //inflater = getActivity().getMenuInflater();
-        //inflater.inflate(R.menu.jobs_menu, menu);
     }
 
     @Override
@@ -99,13 +86,10 @@ public class EmployeeChooserFragment extends Fragment implements View.OnClickLis
     public void onClick(View view) {
 
 
-
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-        //todo instead of name we want the email so we can go ahead and do that.
 
         Employee clickedEmployee = MainActivity.employees.get(i);
         MainActivity.selectedEmployee = clickedEmployee;

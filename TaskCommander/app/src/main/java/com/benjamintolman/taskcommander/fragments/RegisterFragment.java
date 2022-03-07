@@ -33,6 +33,7 @@ import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.Utils.BitmapUtility;
+import com.benjamintolman.taskcommander.Utils.NetworkUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -75,6 +76,9 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     Spinner roleSpinner;
     EditText companyCodeInput;
     Button registerButton;
+
+    NetworkUtility nwu = new NetworkUtility(getContext());
+
 
     public static RegisterFragment newInstance() {
 
@@ -140,6 +144,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
         if(view.getId() == registerButton.getId()){
             Log.d(TAG, "Register button tapped");
+
+            nwu = new NetworkUtility(getContext());
+            if(!nwu.isConnected()){
+                return;
+            }
 
             email = emailInput.getText().toString();
 

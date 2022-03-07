@@ -52,7 +52,6 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             employeesButton.setVisibility(View.GONE);
         }
 
-        //todo should be a check to see if this is a manager as soon as possible and keep the user profile in main activity.
         Activity activity = getActivity();
         activity.setTitle("Dashboard");
 

@@ -13,8 +13,8 @@ public class Employee {
     private String role;
     private String companyCode;
 
-    private double lat;
-    private double lon;
+    private double lat = 0;
+    private double lon = 0;
 
     private ArrayList<Job> jobList;
 

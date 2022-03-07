@@ -25,6 +25,7 @@ import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.Utils.BitmapUtility;
+import com.benjamintolman.taskcommander.Utils.NetworkUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,6 +64,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     boolean imageUploaded = false;
     ImageView profileImage;
     Bitmap profileImageBitmap = null;
+
+    NetworkUtility nwu = new NetworkUtility(getContext());
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference mStorageRef;
@@ -165,6 +168,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
         if (view.getId() == updateButton.getId()) {
             Log.d(TAG, "Update button tapped");
+
+            nwu = new NetworkUtility(getContext());
+            if(!nwu.isConnected()){
+                return;
+            }
 
             email = emailInput.getText().toString();
 
@@ -378,6 +386,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
         if (view.getId() == deleteButton.getId()) {
 
+            nwu = new NetworkUtility(getContext());
+            if(!nwu.isConnected()){
+                return;
+            }
+
             email = MainActivity.currentUser.getEmail();
 
             // Create a Cloud Storage reference from the app
@@ -459,12 +472,5 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
-
-    public static void deleteCache(Context context) {
-        try {
-            File dir = context.getCacheDir();
-            dir.delete();
-        } catch (Exception e) { e.printStackTrace();}
     }
 }

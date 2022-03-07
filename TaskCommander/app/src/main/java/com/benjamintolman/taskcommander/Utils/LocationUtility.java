@@ -1,6 +1,7 @@
 package com.benjamintolman.taskcommander.Utils;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,9 +10,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.benjamintolman.taskcommander.MainActivity;
 
 public class LocationUtility extends AppCompatActivity implements View.OnClickListener, LocationListener {
 
@@ -20,35 +26,75 @@ public class LocationUtility extends AppCompatActivity implements View.OnClickLi
     LocationManager mLocationManager;
 
     boolean mRequestingUpdates = false;
+    Context mContext;
+    Activity mActivity;
 
-    //todo plug this in to actually get location data
+    public LocationUtility(Context context, Activity activity){
+        this.mContext = context;
+        this.mActivity = activity;
+    }
 
-    public void getLocationData(Context context){
+    public boolean getLocationPermission(){
+        // Check if we have permissions.
+        if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED){
+
+            return true;
+
+        } else{
+            // Request permissions if we don't have them.
+            ActivityCompat.requestPermissions(mActivity, new String[] {
+                    Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSIONS);
+
+            return false;
+        }
+    }
+
+    public void getUserLocationData(Context context){
+
+        mLocationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+
+        if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED && !mRequestingUpdates) {
+            // Request location updates using 'this' as our LocationListener.
+            //todo this can be NETWORK PROVIDER on a phone.
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    2000,
+                    10.0f,
+                    this);
+            // Track that we're requesting updates so we don't request them twice.
+            mRequestingUpdates = true;
+
+            Log.d("asdfsadf", "asdfsaf");
+        }
 
             // Get our location manager.
-            mLocationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+//            mLocationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+//
+//            // Check if we have permissions.
+//            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                    == PackageManager.PERMISSION_GRANTED){
+//
+//                // Get our last known location and check if it's a valid location.
+//                Location lastKnown = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//
+//                // Display the latitude and longitude.
+//                if(lastKnown != null){
+//
+//                    MainActivity.currentUser.setLat(lastKnown.getLatitude());
+//                    //TextView latitude = (TextView) findViewById(R.id.text_latitude);
+//                    //latitude.setText(Double.toString(lastKnown.getLatitude()));
+//                    MainActivity.currentUser.setLon(lastKnown.getLongitude());
+//                    //TextView longitude = (TextView) findViewById(R.id.text_longitude);
+//                    //longitude.setText(Double.toString(lastKnown.getLongitude()));
+//                }
+//            } else{
+//                // Request permissions if we don't have them.
+//                ActivityCompat.requestPermissions(this, new String[] {
+//                        Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSIONS);
+//            }
 
-            // Check if we have permissions.
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED){
 
-                // Get our last known location and check if it's a valid location.
-                Location lastKnown = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                // Display the latitude and longitude.
-                if(lastKnown != null){
-
-                    //TextView latitude = (TextView) findViewById(R.id.text_latitude);
-                    //latitude.setText(Double.toString(lastKnown.getLatitude()));
-
-                    //TextView longitude = (TextView) findViewById(R.id.text_longitude);
-                    //longitude.setText(Double.toString(lastKnown.getLongitude()));
-                }
-            } else{
-                // Request permissions if we don't have them.
-                ActivityCompat.requestPermissions(this, new String[] {
-                        Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSIONS);
-            }
         }
 
     @Override
@@ -77,6 +123,10 @@ public class LocationUtility extends AppCompatActivity implements View.OnClickLi
        // TextView longitude = (TextView) findViewById(R.id.text_longitude);
        // longitude.setText(Double.toString(location.getLongitude()));
 
+        MainActivity.currentUser.setLat(location.getLatitude());
+        MainActivity.currentUser.setLon(location.getLongitude());
+
+        Log.d("LAT LON ", String.valueOf(MainActivity.currentUser.getLat()) + String.valueOf(MainActivity.currentUser.getLon()));
         if(mRequestingUpdates){
             mRequestingUpdates = false;
             mLocationManager.removeUpdates(this);

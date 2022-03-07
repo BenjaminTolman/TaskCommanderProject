@@ -19,6 +19,8 @@ import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
+import com.benjamintolman.taskcommander.Utils.LocationUtility;
+import com.benjamintolman.taskcommander.Utils.NetworkUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -48,6 +50,10 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
     private StorageReference mStorageRef;
 
+
+    private LocationUtility lu;
+    private NetworkUtility nwu;
+
     public static SignInFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -73,9 +79,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        //todo can we use picasso go get the profile images?
-        // or get them via https?
-
         Activity activity = getActivity();
         activity.setTitle(R.string.sign_in);
         MainActivity.currentScreen = "SignIn";
@@ -87,6 +90,18 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
 
         if (view.getId() == signInButton.getId()) {
+
+            nwu = new NetworkUtility(getContext());
+            if(!nwu.isConnected()){
+
+                return;
+            }
+            lu = new LocationUtility(getContext(), getActivity());
+            lu.getLocationPermission();
+            if(!lu.getLocationPermission()){
+                Toast.makeText(getContext(), "Location is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -119,6 +134,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             getJobs();
                                             getUsers();
 
+                                            lu.getUserLocationData(getContext());
+
                                         } else {
                                             Toast.makeText(getContext(), "Password or Email was incorrect.", Toast.LENGTH_SHORT).show();
                                         }
@@ -129,9 +146,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                             }
                         }
                     });
-
-            //todo get employees too if company code is this company.
-            //todo switch to having a company collection for beta.
         }
 
         if (view.getId() == registerButton.getId()) {
@@ -215,7 +229,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 String companyCode = document.get("companycode").toString();
                                 if (companyCode.equals(MainActivity.currentUser.getCompanyCode())) {
 
-                                    //todo create user add user to users
                                     Log.d("USER FOUND ", companyCode);
                                     Employee newEmployee = new Employee(
                                             document.get("email").toString(),

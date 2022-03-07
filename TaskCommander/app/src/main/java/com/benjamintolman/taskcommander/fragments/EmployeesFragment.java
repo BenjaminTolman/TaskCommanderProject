@@ -64,7 +64,6 @@ public class EmployeesFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onClick(View view) {
 
-        //todo this should be a listview item click
 
     }
 

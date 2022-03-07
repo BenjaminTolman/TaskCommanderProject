@@ -31,8 +31,6 @@ import java.util.Map;
 
 public class JobDetailsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    //todo get lat lon and pop in map.
-
     public static final String TAG = "JobDetailsFragment";
 
     TextView jobNameInput;
@@ -50,8 +48,6 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
     boolean jobStatusBool = false;
     Spinner jobStatus;
 
-
-    //todo this needs to come from serialized Job after Alpha
     public static JobDetailsFragment newInstance() {
 
         Bundle args = new Bundle();

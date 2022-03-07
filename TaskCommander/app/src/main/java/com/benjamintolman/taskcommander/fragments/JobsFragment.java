@@ -39,8 +39,6 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
 
     public static final String TAG = "JobsFragment";
 
-    //todo is this a manager? If this is, show all jobs, if not show the assigned jobs.
-
     ListView jobsList;
     boolean filterSpinnerBool;
     Spinner filterSpinner;

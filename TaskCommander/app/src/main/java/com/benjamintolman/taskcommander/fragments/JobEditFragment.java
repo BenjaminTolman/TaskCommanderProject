@@ -28,6 +28,7 @@ import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
+import com.benjamintolman.taskcommander.Utils.NetworkUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.benjamintolman.taskcommander.adapters.EmployeeAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -58,6 +59,8 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
 
     ListView employeeList;
     EmployeeAdapter employeeAdapter;
+
+    NetworkUtility nwu = new NetworkUtility(getContext());
 
     boolean jobStatusBool = false;
     Spinner jobStatus;
@@ -207,7 +210,12 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
         }
 
         public void saveJob() {
-            //todo validate these
+
+            nwu = new NetworkUtility(getContext());
+            if(!nwu.isConnected()){
+                return;
+            }
+
             String jobName = jobNameInput.getText().toString();
             String jobAddress = jobAddressInput.getText().toString();
 
@@ -288,10 +296,6 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                 return;
             }
 
-            //IF the job has a different name, delete from firebase, delete from jobs
-            //add the new job in it's place.
-            //Todo should just delete and remake for const.
-
 
                 Job newJob = new Job(
                         jobName,
@@ -350,7 +354,7 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                 job.put("cName", clientName);
                 job.put("cPhone", clientPhone);
                 job.put("companycode", MainActivity.currentUser.getCompanyCode());
-                job.put("assigned", MainActivity.selectedEmployee.getName());
+                job.put("assigned", employeeAssignment.getText().toString());
                 job.put("status", MainActivity.currentJob.getJobStatus());
 
 
@@ -409,6 +413,12 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     }
 
     public void deleteJob(){
+
+        nwu = new NetworkUtility(getContext());
+        if(!nwu.isConnected()){
+            //todo warn for offline
+            return;
+        }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

@@ -28,6 +28,7 @@ import com.benjamintolman.taskcommander.MainActivity;
 import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
+import com.benjamintolman.taskcommander.Utils.NetworkUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.benjamintolman.taskcommander.adapters.EmployeeAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -53,6 +54,8 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     Button employeeAssignment;
     Button saveButton;
     Button cancelButton;
+
+    NetworkUtility nwu = new NetworkUtility(getContext());
 
     ListView employeeList;
     EmployeeAdapter employeeAdapter;
@@ -159,6 +162,11 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
         public void saveJob() {
 
+            nwu = new NetworkUtility(getContext());
+            if(!nwu.isConnected()){
+                return;
+            }
+
             String jobName = jobNameInput.getText().toString();
             String jobAddress = jobAddressInput.getText().toString();
 
@@ -239,7 +247,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                 return;
             }
 
-            //todo employee assigned needs name and email.
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             // Create a new user with a first and last name
 
@@ -255,7 +262,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
             job.put("cName", clientName);
             job.put("cPhone", clientPhone);
             job.put("companycode", MainActivity.currentUser.getCompanyCode());
-            job.put("assigned", employeeAssigned); //todo is MA.selectedUser going to work here?
+            job.put("assigned", employeeAssigned);
             job.put("status", "Posted");
             //this should be an ID not whatever we have
 
