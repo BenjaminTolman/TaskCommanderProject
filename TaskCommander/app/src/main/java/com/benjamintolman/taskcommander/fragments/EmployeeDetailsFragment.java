@@ -136,7 +136,7 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
         }else{
             MarkerOptions options = new MarkerOptions();
             options.title(MainActivity.currentUser.getName())
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             //options.snippet("MDV Offices");
             LatLng employeeLocation = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
             options.position(employeeLocation);
