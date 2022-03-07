@@ -6,8 +6,8 @@ public class Job{
 
     private String jobTitle;
     private String jobAddress;
-    private Double jobLat;
-    private Double jobLon;
+    private Double jobLat = 0.0;
+    private Double jobLon = 0.0;
     private String jobStatus;
     private int jobHour;
     private int jobMin;

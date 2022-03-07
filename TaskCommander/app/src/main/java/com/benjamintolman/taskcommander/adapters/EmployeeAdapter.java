@@ -85,6 +85,8 @@ public class EmployeeAdapter extends BaseAdapter {
             TextView eName = convertView.findViewById(R.id.employee_item_name);
             TextView busyText = convertView.findViewById(R.id.job_creation_employee_selector_busytext);
 
+            //todo put in the how many jobs they have here.
+            //todo for each job in jobs, if it's assigned to this user, then yes.
 
             ImageView image = convertView.findViewById(R.id.employee_item_profile_image);
             eName.setText(employee.getName());

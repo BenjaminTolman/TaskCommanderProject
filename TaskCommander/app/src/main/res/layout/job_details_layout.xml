@@ -15,6 +15,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <fragment
+                android:id="@+id/google_map"
+                class="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="56dp"
+                android:layout_marginEnd="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/job_details_name"
                 android:layout_width="357dp"
@@ -90,16 +103,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="36dp"
-                android:layout_marginEnd="28dp"
+                android:layout_marginTop="24dp"
 
+                android:layout_marginEnd="28dp"
                 android:text="Job Information"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/google_map" />
 
             <TextView
                 android:id="@+id/job_creation_client_info_textview"

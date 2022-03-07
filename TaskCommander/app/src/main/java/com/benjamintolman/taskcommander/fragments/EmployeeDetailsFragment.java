@@ -44,10 +44,6 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
 
     private ListView jobList;
 
-    //todo get actual last lat/lon from selectec employee
-    private double mapLat = 37.3315;
-    private double mapLon = -121.9700;
-
     public static EmployeeDetailsFragment newInstance() {
 
         Bundle args = new Bundle();
