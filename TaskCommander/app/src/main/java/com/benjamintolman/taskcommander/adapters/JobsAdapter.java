@@ -73,6 +73,9 @@ public class JobsAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.job_item_layout, parent, false);
         }
 
+        //todo if myjobs match currentuser
+        //employee should not have access to see all their jobs for employee info?
+        //so just show jobs for this employee.
         Job job = (Job) getItem(position);
 
         if(position <= getCount())

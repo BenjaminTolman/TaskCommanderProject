@@ -63,6 +63,7 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
 
         View view = inflater.inflate(R.layout.jobs_layout, container, false);
 
+        //todo make a menu for employee.
         setHasOptionsMenu(true);
 
         for (int i = 0; i < MainActivity.jobs.size(); i++) {
@@ -129,6 +130,10 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
             case "add":
                 Log.d(TAG, "Add was clicked");
 
+                //todo this is a bandaid and actual menu change needed.
+                if(MainActivity.currentUser.getRole().equals("Employee")){
+                    break;
+                }
                 getParentFragmentManager().beginTransaction().replace(
                         R.id.fragment_holder,
                         JobCreateFragment.newInstance()

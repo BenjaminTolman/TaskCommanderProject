@@ -103,7 +103,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         employeeList = view.findViewById(R.id.job_creation_employee_list);
         employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());
 
-
         MainActivity.selectorJobHour = jobTimeInput.getCurrentHour();
         MainActivity.selectorJobMonth = jobDateInput.getMonth();
         MainActivity.selectorJobDay = jobDateInput.getDayOfMonth();

@@ -2,6 +2,7 @@ package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.benjamintolman.taskcommander.MainActivity;
+import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.adapters.EmployeeAdapter;
 import com.benjamintolman.taskcommander.adapters.JobsAdapter;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.util.ArrayList;
+
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallback, AdapterView.OnItemClickListener, GoogleMap.InfoWindowAdapter {
@@ -43,6 +47,8 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
     private TextView phoneText;
 
     private ListView jobList;
+
+    ArrayList<Job> employeeDetailsJobList = new ArrayList<>();
 
     public static EmployeeDetailsFragment newInstance() {
 
@@ -75,7 +81,20 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
         nameText.setText(MainActivity.selectedEmployee.getName());
         phoneText.setText(MainActivity.selectedEmployee.getPhoneFormatted());
 
-        JobsAdapter jobsAdapter = new JobsAdapter(MainActivity.jobs, getContext());
+        
+        for (int i = 0; i < MainActivity.jobs.size(); i++) {
+            employeeDetailsJobList.add(MainActivity.jobs.get(i));
+        }
+
+
+        for (int i = 0; i < employeeDetailsJobList.size(); i++) {
+            if(!employeeDetailsJobList.get(i).getEmployeeAssigned().equals(MainActivity.selectedEmployee.getName())){
+                employeeDetailsJobList.remove(i);
+            }
+        }
+
+
+        JobsAdapter jobsAdapter = new JobsAdapter(employeeDetailsJobList, getContext());
 
         jobList = view.findViewById(R.id.employee_details_job_listview);
         jobList.setAdapter(jobsAdapter);
