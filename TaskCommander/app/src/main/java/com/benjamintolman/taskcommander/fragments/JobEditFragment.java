@@ -1,6 +1,8 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,7 +38,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JobEditFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener {
@@ -248,7 +252,30 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                     return;
                 }
 
-            }else{
+                Geocoder coder = new Geocoder(getContext());
+                List<Address> address;
+
+                try {
+                    address = coder.getFromLocationName(jobAddress,5);
+                    if (address==null) {
+                        return;
+                    }
+                    try{
+                        Address location = address.get(0);
+
+                    }catch(Exception e){
+                        Toast.makeText(getContext(), "Not a valid address.", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                        return;
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+        }else{
                 Toast.makeText(getContext(), "Job Address is Empty.", Toast.LENGTH_SHORT).show();
                 return;
             }

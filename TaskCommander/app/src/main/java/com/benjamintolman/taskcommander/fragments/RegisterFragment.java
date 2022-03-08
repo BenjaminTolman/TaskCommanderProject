@@ -33,6 +33,7 @@ import com.benjamintolman.taskcommander.Objects.Employee;
 import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.Utils.BitmapUtility;
+import com.benjamintolman.taskcommander.Utils.LocationUtility;
 import com.benjamintolman.taskcommander.Utils.NetworkUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -65,6 +66,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     ImageView profileImage;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    private LocationUtility lu;
 
     Bitmap profileImageBitmap;
     boolean imageUploaded = false;
@@ -219,6 +222,17 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode);
              MainActivity.currentUser = thisEmployee;
 
+
+        lu = new LocationUtility(getContext(), getActivity());
+        lu.getLocationPermission();
+        if(!lu.getLocationPermission()){
+            Toast.makeText(getContext(), "Location is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        MainActivity.employees.add(thisEmployee);
+        lu.getUserLocationData(getContext());
+
              if(imageUploaded){
 
                  // Create a Cloud Storage reference from the app
@@ -281,7 +295,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
                         Log.d(TAG, "DocumentSnapshot successfully written!");
 
+
                         getJobs();
+
+
 
                         //After register we go to dashboard
                         getParentFragmentManager().beginTransaction().replace(

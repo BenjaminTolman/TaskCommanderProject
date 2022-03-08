@@ -2,6 +2,8 @@ package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,11 +33,16 @@ import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.Utils.NetworkUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.benjamintolman.taskcommander.adapters.EmployeeAdapter;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JobCreateFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener{
@@ -187,6 +194,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                         Toast.makeText(getContext(), "Job Name greater than 30 characters.", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                 }
             else{
                 Toast.makeText(getContext(), "Job Name is Empty.", Toast.LENGTH_SHORT).show();
@@ -199,11 +207,27 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                     return;
                 }
 
-            }else{
-                Toast.makeText(getContext(), "Job Address is Empty.", Toast.LENGTH_SHORT).show();
-                return;
-            }
+                    Geocoder coder = new Geocoder(getContext());
+                    List<Address> address;
 
+                    try {
+                        address = coder.getFromLocationName(jobAddress,5);
+                        if (address==null) {
+                            return;
+                        }
+                        try{
+                            Address location = address.get(0);
+
+                        }catch(Exception e){
+                            Toast.makeText(getContext(), "Not a valid address.", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                            return;
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
 
             if (!jobNotes.isEmpty()) {
                 if(!ValidationUtility.validateSize(jobNotes, 240)){

@@ -151,6 +151,18 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         if (view.getId() == registerButton.getId()) {
             Log.d(TAG, "Register");
 
+            nwu = new NetworkUtility(getContext());
+            if(!nwu.isConnected()){
+
+                return;
+            }
+            lu = new LocationUtility(getContext(), getActivity());
+            lu.getLocationPermission();
+            if(!lu.getLocationPermission()){
+                Toast.makeText(getContext(), "Location is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             getParentFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
                     RegisterFragment.newInstance()

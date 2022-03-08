@@ -230,7 +230,7 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setInfoWindowAdapter(this);
-        addMapMarker();
+        //addMapMarker();
         zoomInCamera();
     }
 
@@ -243,110 +243,69 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
 
         if(MainActivity.currentUser != null){
             if(MainActivity.currentUser.getLat() != 0 && MainActivity.currentUser.getLon() != 0){
-                LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
-                CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 10);
-                mMap.moveCamera(cameraMovement);
+                //LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
+                //CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 10);
+                //mMap.moveCamera(cameraMovement);
+
+                getLocationFromAddress(MainActivity.currentJob.getJobAddress());
                 return;
             }
             Toast.makeText(getContext(), "This employee does not have Location Data.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
-        CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 5);
+        //LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
+        //CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 5);
 
-
-        mMap.moveCamera(cameraMovement);
+        //mMap.moveCamera(cameraMovement);
 
     }
 
-    private void addMapMarker() {
+    private void addMapMarker(double lats, double lons) {
         if(mMap == null){
             return;
         }else{
             MarkerOptions options = new MarkerOptions();
-            options.title(MainActivity.currentUser.getName())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-            //options.snippet("MDV Offices");
-            LatLng employeeLocation = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
-            options.position(employeeLocation);
+            options.title(MainActivity.currentJob.getJobTitle())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            //options.snippet("Job details");
+            LatLng jobLocation = new LatLng(lats, lons);
+            options.position(jobLocation);
             mMap.addMarker(options);
         }
     }
 
-    //https://stackoverflow.com/questions/3574644/how-can-i-find-the-latitude-and-longitude-from-address
-
-    public void convertAddress() {
-        if (address != null && !address.isEmpty()) {
-            try {
-                List<Address> addressList = geoCoder.getFromLocationName(address, 1);
-                if (addressList != null && addressList.size() > 0) {
-                    double lat = addressList.get(0).getLatitude();
-                    double lng = addressList.get(0).getLongitude();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } // end catch
-        } // end if
-    } // end convertAddress
-
-    public GeoPoint getLocationFromAddress(String strAddress) {
+    public void getLocationFromAddress(String strAddress){
 
         Geocoder coder = new Geocoder(getContext());
-        Address address;
-        GeoPoint p1 = null;
+        List<Address> address;
 
         try {
-            address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
-                return null;
+            address = coder.getFromLocationName(strAddress,5);
+            if (address==null) {
+                return;
             }
-            Address location = address;
-            location.getLatitude();
-            location.getLongitude();
+            try{
+                Address location = address.get(0);
 
-            p1 = new GeoPoint((double) (location.getLatitude() * 1E6),
-                    (double) (location.getLongitude() * 1E6));
+                location.getLatitude();
+                location.getLatitude();;
 
-            return p1;
+                LatLng newLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 15);
+
+                addMapMarker(location.getLatitude(), location.getLongitude());
+
+                mMap.moveCamera(cameraMovement);
+
+            }catch(Exception e){
+                Toast.makeText(getContext(), "There is no valid address for this job.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+                return;
+            }
+
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-
-
-
-
-
-        public void goToLocationFromAddress(String strAddress) {
-            //Create coder with Activity context - this
-            Geocoder coder = new Geocoder(this);
-            List<Address> address;
-
-            try {
-                //Get latLng from String
-                address = coder.getFromLocationName(strAddress, 5);
-
-                //check for null
-                if (address != null) {
-
-                    //Lets take first possibility from the all possibilities.
-                    try {
-                        Address location = address.get(0);
-                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                        //Animate and Zoon on that map location
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                    } catch (IndexOutOfBoundsException er) {
-                        Toast.makeText(this, "Location isn't available", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-
-            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+    }
 }
