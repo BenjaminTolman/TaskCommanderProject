@@ -5,10 +5,5 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="save"
         app:showAsAction="always" />
-    <item
-        android:icon="@drawable/hamburger"
-        android:orderInCategory="100"
-        android:title="nav"
-        app:showAsAction="always">
-    </item>
+
 </menu>

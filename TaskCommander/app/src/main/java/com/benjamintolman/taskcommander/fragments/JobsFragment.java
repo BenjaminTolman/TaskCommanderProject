@@ -132,6 +132,7 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
 
                 //todo this is a bandaid and actual menu change needed.
                 if(MainActivity.currentUser.getRole().equals("Employee")){
+                    Toast.makeText(getContext(), "Employees cannot create jobs.", Toast.LENGTH_SHORT).show();
                     break;
                 }
                 getParentFragmentManager().beginTransaction().replace(

@@ -81,7 +81,7 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
         nameText.setText(MainActivity.selectedEmployee.getName());
         phoneText.setText(MainActivity.selectedEmployee.getPhoneFormatted());
 
-        
+
         for (int i = 0; i < MainActivity.jobs.size(); i++) {
             employeeDetailsJobList.add(MainActivity.jobs.get(i));
         }
