@@ -76,6 +76,7 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
                 }
             }
 
+            Log.d("ROLE ", MainActivity.currentUser.getRole());
         //Remove jobs that are not for this employee if this is an employee.
         if(MainActivity.currentUser.getRole().equals("Employee")) {
             for (int i = 0; i < jobsFragmentJobs.size(); i++) {
