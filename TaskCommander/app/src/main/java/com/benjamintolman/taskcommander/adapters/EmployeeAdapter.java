@@ -27,6 +27,8 @@ public class EmployeeAdapter extends BaseAdapter {
     final ArrayList<Employee> mCollection;
     final Context mContext;
 
+    boolean isbusy = false;
+
     int radius = 100;
     int margin = 5;
     Transformation transformation = new RoundedCornersTransformation(radius, margin);
@@ -100,7 +102,11 @@ public class EmployeeAdapter extends BaseAdapter {
                 //assignment screen is the same then user is busy
                 //todo add in if =/- an hour for hour time.
 
-                busyText.setText("");
+                Log.d("HITTING ", employee.getName());
+                //if(!isbusy){
+                //    busyText.setText("");
+                //}
+
                 for (int i = 0; i < MainActivity.jobs.size(); i++) {
                     if(MainActivity.jobs.get(i).getEmployeeAssigned().equals(employee.getName())){
 
@@ -111,15 +117,33 @@ public class EmployeeAdapter extends BaseAdapter {
                         int hourPlus = hour += 1;
                         int hourMinus = hour -= 1;
 
-                        if(hour <= MainActivity.selectorJobHour &&
+                        Log.d("Mday ",String.valueOf(MainActivity.jobs.get(i).getJobDay()));
+                        Log.d("MMonth",String.valueOf(MainActivity.jobs.get(i).getJobMonth()));
+                        Log.d("Myear ",String.valueOf(MainActivity.jobs.get(i).getJobYear()));
+                        Log.d("Mhour ",String.valueOf(MainActivity.jobs.get(i).getJobHour()));
+                        Log.d("Cday ",String.valueOf(MainActivity.selectorJobDay));
+                        Log.d("Cmonth ",String.valueOf(MainActivity.selectorJobMonth));
+                        Log.d("Cyear ",String.valueOf(MainActivity.selectorJobYear));
+                        Log.d("Chour ",String.valueOf(MainActivity.selectorJobHour));
+
+
+                        if(hour == MainActivity.selectorJobHour &&
                             day == MainActivity.selectorJobDay &&
                             month == MainActivity.selectorJobMonth &&
                             year == MainActivity.selectorJobYear ){
-                                busyText.setText("Busy at this time.");
+                            Log.d("MATCH ", employee.getName());
+                            busyText.setText("Busy at this time.");
+                            String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + employee.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
+                            Picasso.get().load(imageUri)
+                                    .transform(transformation).into((image));
+                            return convertView;
                         }
                     }
                 }
             }
+
+
+
 
             String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + employee.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
             Picasso.get().load(imageUri)

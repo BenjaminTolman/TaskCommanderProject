@@ -103,6 +103,12 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         employeeList = view.findViewById(R.id.job_creation_employee_list);
         employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());
 
+
+        MainActivity.selectorJobHour = jobTimeInput.getCurrentHour();
+        MainActivity.selectorJobMonth = jobDateInput.getMonth();
+        MainActivity.selectorJobDay = jobDateInput.getDayOfMonth();
+        MainActivity.selectorJobYear = jobDateInput.getYear();
+
         employeeList.setAdapter(employeeAdapter);
         employeeList.setOnItemClickListener(this);
 
@@ -346,6 +352,10 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onTimeChanged(TimePicker timePicker, int i, int i1) {
         MainActivity.selectorJobHour = i;
+        MainActivity.selectorJobHour = jobTimeInput.getCurrentHour();
+        MainActivity.selectorJobMonth = jobDateInput.getMonth();
+        MainActivity.selectorJobDay = jobDateInput.getDayOfMonth();
+        MainActivity.selectorJobYear = jobDateInput.getYear();
         employeeList.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
     }
@@ -356,6 +366,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         MainActivity.selectorJobDay = i2;
         MainActivity.selectorJobMonth = i1;
         MainActivity.selectorJobYear = i;
+        MainActivity.selectorJobHour = jobTimeInput.getCurrentHour();
         employeeList.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
     }

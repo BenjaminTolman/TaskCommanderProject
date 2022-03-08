@@ -479,6 +479,10 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     @Override
     public void onTimeChanged(TimePicker timePicker, int i, int i1) {
         MainActivity.selectorJobHour = i;
+        MainActivity.selectorJobHour = jobTimeInput.getCurrentHour();
+        MainActivity.selectorJobMonth = jobDateInput.getMonth();
+        MainActivity.selectorJobDay = jobDateInput.getDayOfMonth();
+        MainActivity.selectorJobYear = jobDateInput.getYear();
         employeeList.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
     }
@@ -489,6 +493,7 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
         MainActivity.selectorJobDay = i2;
         MainActivity.selectorJobMonth = i1;
         MainActivity.selectorJobYear = i;
+        MainActivity.selectorJobHour = jobTimeInput.getCurrentHour();
         employeeList.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
     }
