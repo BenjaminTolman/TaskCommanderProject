@@ -145,6 +145,8 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="24dp"
                 android:text="Email (name@email.com)"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profile_profileimage" />
 
@@ -155,6 +157,8 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
                 android:text="Name (30 Character Limit)"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profile_email_edittext" />
 
@@ -165,6 +169,8 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
                 android:text="Password (10 Characters, Case Sensitive)"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profile_username_edittext" />
 
@@ -175,6 +181,8 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
                 android:text="Phone (5555551212)"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profile_password_edittext" />
 
@@ -185,6 +193,8 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
                 android:text="Role (Your role)"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profile_phone_edittext" />
 
@@ -195,6 +205,8 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
                 android:text="Company Code (30 Character Limit)"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profile_role_spinner" />
 
@@ -207,6 +219,7 @@
                 android:layout_marginEnd="80dp"
                 android:backgroundTint="#932525"
                 android:text="Delete"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintStart_toStartOf="parent"

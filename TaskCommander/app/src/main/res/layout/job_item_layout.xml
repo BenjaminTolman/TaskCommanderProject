@@ -56,6 +56,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="This is a job title"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.045"

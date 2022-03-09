@@ -10,7 +10,10 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-27dp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -107,7 +110,7 @@
 
                 android:layout_marginEnd="28dp"
                 android:text="Job Information"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -122,7 +125,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="28dp"
                 android:text="Client Information"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.344"
@@ -209,7 +212,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="30dp"
                 android:text="Assigned To"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -223,6 +226,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="28dp"
                 android:text="Job Name"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -236,6 +240,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
                 android:text="Job Address"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -249,6 +254,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
                 android:text="Job Time"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -262,6 +268,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
                 android:text="Job Date"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -275,6 +282,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
                 android:text="Job Notes"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -288,6 +296,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
                 android:text="Client Name"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -301,6 +310,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
                 android:text="Client Phone"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -325,6 +335,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="30dp"
                 android:text="Job Status"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -332,7 +343,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
