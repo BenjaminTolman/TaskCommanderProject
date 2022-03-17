@@ -24,6 +24,8 @@
         <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/layout/register_layout.xml" value="0.33" />
         <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/menu/jobs_create_menu.xml" value="0.4125" />
         <entry key="..\:/Users/Benjam/Documents/GitHub/TaskCommanderProject/TaskCommander/app/src/main/res/menu/jobs_menu.xml" value="0.533197139938713" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.24479166666666666" />
+        <entry key="app/src/main/res/drawable/button_border.xml" value="0.3765625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dashboard_layout.xml" value="0.33" />
         <entry key="app/src/main/res/layout/employee_chooser_layout.xml" value="0.30364583333333334" />
@@ -31,9 +33,9 @@
         <entry key="app/src/main/res/layout/employee_info_window.xml" value="0.1828774062816616" />
         <entry key="app/src/main/res/layout/employee_item_layout.xml" value="0.5" />
         <entry key="app/src/main/res/layout/employees_page_layout.xml" value="0.1828774062816616" />
-        <entry key="app/src/main/res/layout/job_create_layout.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/job_create_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/job_details_layout.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/job_edit_layout.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/job_edit_layout.xml" value="0.345372460496614" />
         <entry key="app/src/main/res/layout/job_item_layout.xml" value="0.30364583333333334" />
         <entry key="app/src/main/res/layout/jobs_layout.xml" value="0.30364583333333334" />
         <entry key="app/src/main/res/layout/login_layout.xml" value="0.25" />
@@ -41,6 +43,8 @@
         <entry key="app/src/main/res/layout/register_layout.xml" value="0.24320652173913043" />
         <entry key="app/src/main/res/menu/jobs_create_menu.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/menu/jobs_menu.xml" value="0.19166666666666668" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.24479166666666666" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.24479166666666666" />
       </map>
     </option>
   </component>

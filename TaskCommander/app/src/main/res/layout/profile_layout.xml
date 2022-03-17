@@ -18,17 +18,20 @@
 
             <Button
                 android:id="@+id/profile_back_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="28dp"
-                android:layout_marginEnd="12dp"
-                android:backgroundTint="#215E9E"
-                android:text="Back"
-                app:layout_constraintEnd_toStartOf="@+id/guideline6"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="28dp"
+                android:backgroundTint="#ffffff"
+                android:text="Cancel"
+                android:textColor="#215E9E"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_company_code_edittext" />
+                app:layout_constraintTop_toBottomOf="@+id/profile_update_button"
+                app:strokeColor="#215E9E"
+                app:strokeWidth="3dp" />
 
             <EditText
                 android:id="@+id/profile_phone_edittext"
@@ -38,6 +41,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="28dp"
                 android:ems="10"
+                android:inputType="phone"
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.497"
@@ -105,6 +109,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="28dp"
+                android:inputType="textCapSentences"
                 android:ems="10"
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -114,16 +119,16 @@
 
             <Button
                 android:id="@+id/profile_update_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="28dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="28dp"
                 android:backgroundTint="#215E9E"
                 android:text="Update"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline6"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/profile_company_code_edittext" />
 
             <Spinner
@@ -212,18 +217,18 @@
 
             <Button
                 android:id="@+id/profile_update_delete_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="80dp"
-                android:layout_marginTop="96dp"
-                android:layout_marginEnd="80dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="28dp"
+
                 android:backgroundTint="#932525"
                 android:text="Delete"
-
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintHorizontal_bias="0.502"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_company_code_edittext" />
+                app:layout_constraintTop_toBottomOf="@+id/profile_back_button" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline6"

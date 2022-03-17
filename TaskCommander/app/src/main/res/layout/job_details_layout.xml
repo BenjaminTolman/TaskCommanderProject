@@ -177,25 +177,32 @@
 
             <Button
                 android:id="@+id/job_details_edit_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="28dp"
                 android:layout_marginTop="24dp"
-                android:backgroundTint="#215E9E"
+                android:layout_marginEnd="28dp"
+                android:backgroundTint="#ffffff"
                 android:text="Edit"
-                app:layout_constraintStart_toEndOf="@+id/job_details_cancel_button"
-                app:layout_constraintTop_toBottomOf="@+id/job_details_job_status_spinner" />
+                android:textColor="#215E9E"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/job_details_job_status_spinner"
+                app:strokeColor="#215E9E"
+                app:strokeWidth="3dp" />
 
             <Button
                 android:id="@+id/job_details_cancel_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="28dp"
                 android:backgroundTint="#215E9E"
                 android:text="Back"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_details_job_status_spinner" />
+                app:layout_constraintTop_toBottomOf="@+id/job_details_edit_button" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline5"

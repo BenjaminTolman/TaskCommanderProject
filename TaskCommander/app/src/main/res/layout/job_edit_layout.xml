@@ -23,7 +23,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="28dp"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="textCapSentences"
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +37,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="28dp"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="textCapSentences"
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
                 android:layout_marginEnd="28dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:inputType="textMultiLine"
+                android:inputType="textCapSentences"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
@@ -137,36 +137,41 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="28dp"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
             <Button
                 android:id="@+id/job_edit_save_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="28dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="28dp"
                 android:backgroundTint="#215E9E"
                 android:text="@string/save"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.025"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_edit_employee_list" />
 
             <Button
                 android:id="@+id/job_edit_cancel_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="12dp"
-                android:backgroundTint="#215E9E"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="28dp"
+                android:backgroundTint="#FFFFFF"
                 android:text="@string/cancel"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
+                android:textColor="#215E9E"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.904"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_edit_employee_list" />
+                app:layout_constraintTop_toBottomOf="@+id/job_edit_save_button"
+                app:strokeColor="#215E9E"
+                app:strokeWidth="3dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline5"
@@ -314,9 +319,11 @@
 
             <Button
                 android:id="@+id/job_edit_delete_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="28dp"
                 android:backgroundTint="#872323"
                 android:text="Delete"
                 app:layout_constraintEnd_toEndOf="parent"
