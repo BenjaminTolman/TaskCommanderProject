@@ -134,7 +134,7 @@ public class LocationUtility extends AppCompatActivity implements LocationListen
                     public void onFailure(@NonNull Exception e) {
                     }
                 });
-    
+
 
 
         if(mRequestingUpdates){

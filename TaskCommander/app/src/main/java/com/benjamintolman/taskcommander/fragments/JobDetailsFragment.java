@@ -211,7 +211,7 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
     @Nullable
     @Override
     public View getInfoContents(@NonNull Marker marker) {
-        //todo this should be job info not employee info
+
         View contents = LayoutInflater.from(getActivity())
                 .inflate(R.layout.employee_info_window, null);
         ((TextView) contents.findViewById(R.id.title)).setText(marker.getTitle());
