@@ -246,7 +246,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             int random = new Random().nextInt((max - min) + 1) + min;
             String newImageURL = email + String.valueOf(random);
 
-            Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode, newImageURL);
+            Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode, newImageURL, MainActivity.currentUser.getLat(),MainActivity.currentUser.getLon());
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             // Create a new user with a first and last name
@@ -259,6 +259,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             user.put("role", role);
             user.put("companycode", companyCode);
             user.put("imageurl", newImageURL);
+            user.put("lat", MainActivity.currentUser.getLat());
+            user.put("lon", MainActivity.currentUser.getLon());
 
             db.collection("users").document(email).set(user)
 

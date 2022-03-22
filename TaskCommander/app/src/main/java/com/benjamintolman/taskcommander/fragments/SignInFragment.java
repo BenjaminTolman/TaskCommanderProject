@@ -159,7 +159,9 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                                     document.get("phone").toString(),
                                                     document.get("role").toString(),
                                                     document.get("companycode").toString(),
-                                                    document.get("imageurl").toString()
+                                                    document.get("imageurl").toString(),
+                                                    Double.parseDouble(document.get("lat").toString()),
+                                                    Double.parseDouble(document.get("lon").toString())
                                             );
 
                                             logInSuccess = true;
@@ -285,7 +287,9 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             document.get("phone").toString(),
                                             document.get("role").toString(),
                                             document.get("companycode").toString(),
-                                            document.get("imageurl").toString()
+                                            document.get("imageurl").toString(),
+                                            Double.parseDouble(document.get("lat").toString()),
+                                            Double.parseDouble(document.get("lon").toString())
                                     );
 
                                     MainActivity.employees.add(newEmployee);

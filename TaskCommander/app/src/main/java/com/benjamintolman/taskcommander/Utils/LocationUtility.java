@@ -18,6 +18,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.benjamintolman.taskcommander.MainActivity;
+import com.benjamintolman.taskcommander.R;
+import com.benjamintolman.taskcommander.fragments.DashboardFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LocationUtility extends AppCompatActivity implements LocationListener {
 
@@ -98,6 +106,35 @@ public class LocationUtility extends AppCompatActivity implements LocationListen
 
         Log.d("LAT LON ", String.valueOf(MainActivity.currentUser.getLat()) + String.valueOf(MainActivity.currentUser.getLon()));
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Create a new user with a first and last name
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", MainActivity.currentUser.getEmail());
+        user.put("name", MainActivity.currentUser.getName());
+        user.put("password", MainActivity.currentUser.getPassword());
+        user.put("phone", MainActivity.currentUser.getPhone());
+        user.put("role", MainActivity.currentUser.getRole());
+        user.put("companycode", MainActivity.currentUser.getCompanyCode());
+        user.put("imageurl", MainActivity.currentUser.getImageURL());
+        user.put("lat", MainActivity.currentUser.getLat());
+        user.put("lon", MainActivity.currentUser.getLon());
+
+        db.collection("users").document(MainActivity.currentUser.getEmail()).set(user)
+
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+    
 
 
         if(mRequestingUpdates){

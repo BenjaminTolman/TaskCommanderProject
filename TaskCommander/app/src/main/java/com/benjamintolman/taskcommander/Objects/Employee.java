@@ -30,7 +30,8 @@ public class Employee {
         this.imageURL = imageURL;
     }
 
-    public Employee(String email, String name, String password, String phone, String role, String companyCode, String imageURL) {
+    public Employee(String email, String name, String password, String phone, String role, String companyCode, String imageURL,
+                    double lat, double lon) {
         this.email = email;
         this.name = name;
         this.password = password;
@@ -38,6 +39,8 @@ public class Employee {
         this.role = role;
         this.companyCode = companyCode;
         this.imageURL = imageURL;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     public String getEmail() {

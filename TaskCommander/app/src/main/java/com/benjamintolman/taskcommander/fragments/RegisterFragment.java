@@ -226,7 +226,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             email = email.toLowerCase(Locale.ROOT);
 
             //Send over our new fields to create a user in firebase.
-            Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode, newImageURL);
+            Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode, newImageURL, 0.0, 0.0);
              MainActivity.currentUser = thisEmployee;
 
 
@@ -289,6 +289,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         user.put("role", role);
         user.put("companycode", companyCode);
         user.put("imageurl", newImageURL);
+        user.put("lat", MainActivity.currentUser.getLat());
+        user.put("lon", MainActivity.currentUser.getLon());
 
         db.collection("users").document(email).set(user)
 

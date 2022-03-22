@@ -160,8 +160,8 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
         }
 
         if(MainActivity.currentUser != null){
-            if(MainActivity.currentUser.getLat() != 0 && MainActivity.currentUser.getLon() != 0){
-                LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
+            if(MainActivity.selectedEmployee.getLat() != 0 && MainActivity.selectedEmployee.getLon() != 0){
+                LatLng newLoc = new LatLng(MainActivity.selectedEmployee.getLat(), MainActivity.selectedEmployee.getLon());
                 CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 10);
                 mMap.moveCamera(cameraMovement);
                 return;
@@ -170,7 +170,7 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
             return;
         }
 
-        LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
+        LatLng newLoc = new LatLng(MainActivity.selectedEmployee.getLat(), MainActivity.selectedEmployee.getLon());
         CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 5);
 
         mMap.moveCamera(cameraMovement);
@@ -182,13 +182,13 @@ public class EmployeeDetailsFragment extends Fragment implements OnMapReadyCallb
             return;
         }else{
 
-            Log.d("CURRENT LAT LON", String.valueOf(MainActivity.currentUser.getLat()));
+            //Log.d("CURRENT LAT LON", String.valueOf(MainActivity.currentUser.getLat()));
 
             MarkerOptions options = new MarkerOptions();
-            options.title(MainActivity.currentUser.getName())
+            options.title(MainActivity.selectedEmployee.getName())
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
             //options.snippet("MDV Offices");
-            LatLng employeeLocation = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
+            LatLng employeeLocation = new LatLng(MainActivity.selectedEmployee.getLat(), MainActivity.selectedEmployee.getLon());
 
             options.position(employeeLocation);
             mMap.addMarker(options);
