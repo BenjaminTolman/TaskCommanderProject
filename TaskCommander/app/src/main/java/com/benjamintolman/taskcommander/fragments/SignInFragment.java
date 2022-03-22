@@ -168,9 +168,9 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             getJobs();
                                             getUsers();
 
-                                            //todo get
+                                            //todo hook this up to firebase.
                                             lu.getUserLocationData(getContext());
-                                            
+
 
                                         } else {
                                             Toast.makeText(getContext(), "Password or Email was incorrect.", Toast.LENGTH_SHORT).show();
