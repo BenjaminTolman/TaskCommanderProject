@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,8 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
     Spinner filterSpinner;
     JobsAdapter jobsAdapter;
 
+    TextView noJobs;
+
 
     ArrayList<Job> jobsFragmentJobs = new ArrayList<>();
 
@@ -63,13 +66,16 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
 
         View view = inflater.inflate(R.layout.jobs_layout, container, false);
 
-        //todo make a menu for employee.
-        setHasOptionsMenu(true);
+        noJobs = view.findViewById(R.id.nojobs);
+
+        if(MainActivity.currentUser.getRole().equals("Manager"))
+        {
+            setHasOptionsMenu(true);
+        }
 
         for (int i = 0; i < MainActivity.jobs.size(); i++) {
             jobsFragmentJobs.add(MainActivity.jobs.get(i));
         }
-
 
             for (int i = 0; i < jobsFragmentJobs.size(); i++) {
                 if(!jobsFragmentJobs.get(i).getCompanyCode().equals(MainActivity.currentUser.getCompanyCode())){
@@ -77,7 +83,6 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
                 }
             }
 
-            Log.d("ROLE ", MainActivity.currentUser.getRole());
         //Remove jobs that are not for this employee if this is an employee.
         if(MainActivity.currentUser.getRole().equals("Employee")) {
             for (int i = 0; i < jobsFragmentJobs.size(); i++) {
@@ -94,6 +99,9 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
         jobsList.setAdapter(jobsAdapter);
         jobsList.setOnItemClickListener(this);
 
+        if(jobsFragmentJobs.size() > 0){
+            noJobs.setVisibility(View.GONE);
+        }
 
         filterSpinnerBool = false;
         filterSpinner = view.findViewById(R.id.jobs_list_filter_spinner);
@@ -130,7 +138,6 @@ public class JobsFragment extends Fragment implements  AdapterView.OnItemClickLi
             case "add":
                 Log.d(TAG, "Add was clicked");
 
-                //todo this is a bandaid and actual menu change needed.
                 if(MainActivity.currentUser.getRole().equals("Employee")){
                     Toast.makeText(getContext(), "Employees cannot create jobs.", Toast.LENGTH_SHORT).show();
                     break;

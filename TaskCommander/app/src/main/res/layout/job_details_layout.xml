@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-27dp">
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="272dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -23,28 +23,31 @@
                 class="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="56dp"
-                android:layout_marginEnd="12dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/job_details_date" />
 
             <TextView
                 android:id="@+id/job_details_name"
                 android:layout_width="357dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="28dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
+                android:text="Job Name"
+                android:textSize="22sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView22" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/job_details_address"
@@ -56,6 +59,7 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView23" />
@@ -66,10 +70,10 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="2dp"
-                android:layout_marginEnd="28dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/guideline5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView24" />
 
@@ -77,14 +81,15 @@
                 android:id="@+id/job_details_date"
                 android:layout_width="0dp"
                 android:layout_height="24dp"
-                android:layout_marginStart="28dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="28dp"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
                 app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
             <TextView
@@ -97,25 +102,10 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView26" />
-
-            <TextView
-                android:id="@+id/job_creation_job_info_textview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="24dp"
-
-                android:layout_marginEnd="28dp"
-                android:text="Job Information"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/google_map" />
 
             <TextView
                 android:id="@+id/job_creation_client_info_textview"
@@ -142,6 +132,7 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -156,6 +147,7 @@
                 android:layout_marginEnd="28dp"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView29" />
@@ -170,6 +162,7 @@
                 android:editable="false"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -219,81 +212,65 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="30dp"
                 android:text="Assigned To"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_details_phone" />
-
-            <TextView
-                android:id="@+id/textView22"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="28dp"
-                android:text="Job Name"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_creation_job_info_textview" />
 
             <TextView
                 android:id="@+id/textView23"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="28dp"
                 android:text="Job Address"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_details_name" />
+                app:layout_constraintTop_toBottomOf="@+id/google_map" />
 
             <TextView
                 android:id="@+id/textView24"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="28dp"
+                android:layout_marginTop="8dp"
                 android:text="Job Time"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/guideline5"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_details_address" />
+                app:layout_constraintTop_toBottomOf="@+id/job_details_name" />
 
             <TextView
                 android:id="@+id/textView25"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="28dp"
                 android:text="Job Date"
                 android:textSize="16sp"
-                android:textStyle="bold"
+
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_details_time" />
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/textView24"
+                app:layout_constraintTop_toBottomOf="@+id/job_details_name" />
 
             <TextView
                 android:id="@+id/textView26"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="28dp"
                 android:text="Job Notes"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_details_date" />
+                app:layout_constraintTop_toBottomOf="@+id/job_details_address" />
 
             <TextView
                 android:id="@+id/textView28"
@@ -304,7 +281,6 @@
                 android:layout_marginEnd="28dp"
                 android:text="Client Name"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_creation_client_info_textview" />
@@ -318,7 +294,6 @@
                 android:layout_marginEnd="28dp"
                 android:text="Client Phone"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_details_client_name" />
@@ -328,7 +303,7 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="64dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

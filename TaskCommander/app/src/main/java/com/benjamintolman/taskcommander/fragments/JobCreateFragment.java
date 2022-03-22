@@ -1,6 +1,7 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -45,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JobCreateFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener{
+public class JobCreateFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener, DialogInterface.OnClickListener{
 
     public static final String TAG = "JobCreationFragment";
 
@@ -61,6 +63,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     Button employeeAssignment;
     Button saveButton;
     Button cancelButton;
+    Button addressVerifyButton;
 
     NetworkUtility nwu = new NetworkUtility(getContext());
 
@@ -82,8 +85,9 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
         View view = inflater.inflate(R.layout.job_create_layout, container, false);
 
-        setHasOptionsMenu(true);
 
+        addressVerifyButton = view.findViewById(R.id.job_create_verify_address_button);
+        addressVerifyButton.setOnClickListener(this);
         jobNameInput = view.findViewById(R.id.job_creation_name);
         jobAddressInput = view.findViewById(R.id.job_creation_address);
         jobTimeInput = view.findViewById(R.id.job_creation_timepicker);
@@ -128,6 +132,44 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View view) {
 
+        if (view.getId() == addressVerifyButton.getId()) {
+
+            Geocoder coder = new Geocoder(getContext());
+            List<Address> address;
+            Address location = null;
+
+            try {
+                address = coder.getFromLocationName(jobAddressInput.getText().toString(),5);
+                if (address==null) {
+                    return;
+                }
+                try{
+                    location = address.get(0);
+                    Log.d("CHECK ADDRESS ", location.getAddressLine(0));
+
+
+
+                }catch(Exception e){
+                    Toast.makeText(getContext(), "Not a valid address.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    return;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(location != null){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("Address is set to");
+                builder.setMessage("Selected address is set to: " + location.getAddressLine(0));
+                builder.setPositiveButton("Ok", this);
+                builder.create();
+                builder.show();
+            }
+
+        }
 
         if (view.getId() == saveButton.getId()) {
             saveJob();
@@ -144,33 +186,6 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
 
     }
 
-        @Override
-        public void onCreateOptionsMenu (@NonNull Menu menu, @NonNull MenuInflater inflater){
-            //super.onCreateOptionsMenu(menu, inflater);
-            inflater = getActivity().getMenuInflater();
-            inflater.inflate(R.menu.jobs_create_menu, menu);
-        }
-
-        @Override
-        public boolean onOptionsItemSelected (MenuItem item){
-            String id = item.toString();
-
-            switch (id) {
-                case "save":
-                    Log.d(TAG, "SAVE was clicked");
-                    saveJob();
-
-                    break;
-
-                case "nav":
-                    Log.d(TAG, "Nav was clicked");
-                    break;
-
-                default:
-                    return false;
-            }
-            return false;
-        }
 
         public void saveJob() {
 
@@ -368,5 +383,10 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         MainActivity.selectorJobHour = jobTimeInput.getCurrentHour();
         employeeList.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+
     }
 }

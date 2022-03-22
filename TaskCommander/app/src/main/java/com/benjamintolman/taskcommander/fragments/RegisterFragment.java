@@ -54,6 +54,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -215,11 +216,17 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             return;
         }
 
+
+        int min = 20;
+        int max = 800000;
+        int random = new Random().nextInt((max - min) + 1) + min;
+        String newImageURL = email + random;
+
             //set email to all lowercase
             email = email.toLowerCase(Locale.ROOT);
 
             //Send over our new fields to create a user in firebase.
-            Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode);
+            Employee thisEmployee = new Employee(email,name,password,phone,role,companyCode, newImageURL);
              MainActivity.currentUser = thisEmployee;
 
 
@@ -235,18 +242,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
              if(imageUploaded){
 
+
                  // Create a Cloud Storage reference from the app
                  StorageReference storageRef = storage.getReference();
 
                  // Create a reference to "mountains.jpg"
-                 StorageReference profileRef = storageRef.child(email + "profile.jpg");
+                 StorageReference profileRef = storageRef.child(newImageURL);
 
-                 // Create a reference to 'images/mountains.jpg'
-                 StorageReference profileImagesRef = storageRef.child("images/" + email + "profile.jpg");
-
-                 // While the file names are the same, the references point to different files
-                 profileRef.getName().equals(profileImagesRef.getName());    // true
-                 profileRef.getPath().equals(profileImagesRef.getPath());    // false
 
                  // Get the data from an ImageView as bytes
                  profileImage.setDrawingCacheEnabled(true);
@@ -286,6 +288,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         user.put("phone", phone);
         user.put("role", role);
         user.put("companycode", companyCode);
+        user.put("imageurl", newImageURL);
 
         db.collection("users").document(email).set(user)
 

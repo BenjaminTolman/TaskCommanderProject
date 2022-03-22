@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:layout_editor_absoluteX="75dp"
-        tools:layout_editor_absoluteY="-54dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-192dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -218,7 +218,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_creation_address" />
+                app:layout_constraintTop_toBottomOf="@+id/job_create_verify_address_button" />
 
             <TextView
                 android:id="@+id/textView18"
@@ -316,6 +316,22 @@
 
 
             </ListView>
+
+            <Button
+                android:id="@+id/job_create_verify_address_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="30dp"
+                android:text="Verify Address"
+                android:backgroundTint="#FFFFFF"
+                android:textColor="#215E9E"
+                app:strokeColor="#215E9E"
+                app:strokeWidth="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/job_creation_address" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

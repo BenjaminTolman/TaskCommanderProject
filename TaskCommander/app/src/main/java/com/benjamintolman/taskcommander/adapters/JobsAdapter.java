@@ -1,6 +1,7 @@
 package com.benjamintolman.taskcommander.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,9 +74,7 @@ public class JobsAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.job_item_layout, parent, false);
         }
 
-        //todo if myjobs match currentuser
-        //employee should not have access to see all their jobs for employee info?
-        //so just show jobs for this employee.
+
         Job job = (Job) getItem(position);
 
         if(position <= getCount())
@@ -86,12 +85,24 @@ public class JobsAdapter extends BaseAdapter {
             TextView jobDateTime = convertView.findViewById(R.id.job_item_date_time);
             TextView jobStatus = convertView.findViewById(R.id.job_item_job_status_text);
 
+
+
             //ImageView image = convertView.findViewById(R.id.imageView);
             jobName.setText(job.getJobTitle());
             jobAddress.setText(job.getJobAddress());
             jobAssigned.setText(job.getEmployeeAssigned());
-            jobDateTime.setText("Date: " + job.getJobDate() + " Time: " + job.getJobTime());
+            jobDateTime.setText(job.getJobDate() + " " + job.getJobTime());
             jobStatus.setText(job.getJobStatus());
+
+            if(jobStatus.getText().toString().equals("Posted")){
+                jobStatus.setTextColor(Color.GREEN);
+            }
+            if(jobStatus.getText().toString().equals("In Progress")){
+                jobStatus.setTextColor(Color.YELLOW);
+            }
+            if(jobStatus.getText().toString().equals("Complete")){
+                jobStatus.setTextColor(Color.RED);
+            }
 
             //bookName.setText(book.getmTitle());
             //String icon = book.getmImageURL();

@@ -14,11 +14,13 @@
 
     <TextView
         android:id="@+id/job_item_job_address"
-        android:layout_width="252dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:text="asdfsaf  sdafsda   sdfsdaf  asadfasd sad sdf sd af"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/job_item_job_title" />
 
@@ -41,7 +43,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:gravity="left"
         android:text="11/23/22 - 09:55"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +59,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="This is a job title"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.045"
@@ -70,6 +73,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="right"
         android:text="Complete"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline3"

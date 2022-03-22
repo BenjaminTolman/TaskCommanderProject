@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
@@ -111,7 +112,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
         //Firestore
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + MainActivity.currentUser.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
+
+        String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + MainActivity.currentUser.getImageURL() + "?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
 
         int radius = 100;
         int margin = 5;
@@ -239,7 +241,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             }
 
 
-            Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode);
+            int min = 20;
+            int max = 800000;
+            int random = new Random().nextInt((max - min) + 1) + min;
+            String newImageURL = email + String.valueOf(random);
+
+            Employee thisEmployee = new Employee(email, name, password, phone, role, companyCode, newImageURL);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             // Create a new user with a first and last name
@@ -251,6 +258,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             user.put("phone", phone);
             user.put("role", role);
             user.put("companycode", companyCode);
+            user.put("imageurl", newImageURL);
 
             db.collection("users").document(email).set(user)
 
@@ -271,40 +279,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
 
             // Create a Cloud Storage reference from the app
             StorageReference storageRef = storage.getReference();
+
             // Create a reference to "mountains.jpg"
-            StorageReference profileRef = storageRef.child(email + "profile.jpg");
-
-            // Create a reference to 'images/mountains.jpg'
-            StorageReference profileImagesRef = storageRef.child("images/" + email + "profile.jpg");
-
-            // While the file names are the same, the references point to different files
-            profileRef.getName().equals(profileImagesRef.getName());    // true
-            profileRef.getPath().equals(profileImagesRef.getPath());    // false
-
-            profileRef = storageRef.child(MainActivity.currentUser.getEmail() + "profile.jpg");
-
-            profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    // File deleted successfully
-                    Log.d(TAG, "onSuccess: deleted file");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Uh-oh, an error occurred!
-                    Log.d(TAG, "onFailure: did not delete file");
-                }
-            });
+            StorageReference profileRef = storageRef.child(newImageURL);
 
 
             // Get the data from an ImageView as bytes
             profileImage.setDrawingCacheEnabled(true);
             profileImage.buildDrawingCache();
             Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
-
-            profileImageBitmap = bitmap;
-
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
@@ -339,21 +322,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             }
             else {
 
-                profileRef = storageRef.child(MainActivity.currentUser.getEmail() + "profile.jpg");
-
-                profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // File deleted successfully
-                        Log.d(TAG, "onSuccess: deleted file");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Uh-oh, an error occurred!
-                        Log.d(TAG, "onFailure: did not delete file");
-                    }
-                });
+//                profileRef = storageRef.child(MainnewImageURL);
+//
+//                profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        // File deleted successfully
+//                        Log.d(TAG, "onSuccess: deleted file");
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        // Uh-oh, an error occurred!
+//                        Log.d(TAG, "onFailure: did not delete file");
+//                    }
+//                });
 
                 DocumentReference dr = db.collection("users").document(MainActivity.currentUser.getEmail());
                 dr.delete()
@@ -397,7 +380,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, A
             StorageReference storageRef = storage.getReference();
 
             // Create a reference to "mountains.jpg"
-            StorageReference profileRef = storageRef.child(email + "profile.jpg");
+            StorageReference profileRef = storageRef.child(MainActivity.currentUser.getImageURL());
 
             profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override

@@ -1,6 +1,7 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Locale;
 
@@ -49,7 +51,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private StorageReference mStorageRef;
-
 
     private LocationUtility lu;
     private NetworkUtility nwu;
@@ -83,8 +84,38 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         activity.setTitle(R.string.sign_in);
         MainActivity.currentScreen = "SignIn";
 
+        try {
+            trimCache(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return view;
     }
+    public static void trimCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else {
+            return false;
+        }
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -102,6 +133,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getContext(), "Location is required", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -125,7 +158,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                                     document.get("password").toString(),
                                                     document.get("phone").toString(),
                                                     document.get("role").toString(),
-                                                    document.get("companycode").toString()
+                                                    document.get("companycode").toString(),
+                                                    document.get("imageurl").toString()
                                             );
 
                                             logInSuccess = true;
@@ -134,7 +168,9 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             getJobs();
                                             getUsers();
 
+                                            //todo get
                                             lu.getUserLocationData(getContext());
+                                            
 
                                         } else {
                                             Toast.makeText(getContext(), "Password or Email was incorrect.", Toast.LENGTH_SHORT).show();
@@ -248,7 +284,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             document.get("password").toString(),
                                             document.get("phone").toString(),
                                             document.get("role").toString(),
-                                            document.get("companycode").toString()
+                                            document.get("companycode").toString(),
+                                            document.get("imageurl").toString()
                                     );
 
                                     MainActivity.employees.add(newEmployee);

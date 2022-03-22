@@ -1,6 +1,7 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.benjamintolman.taskcommander.MainActivity;
@@ -43,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JobEditFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener {
+public class JobEditFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener, DialogInterface.OnClickListener {
 
     public static final String TAG = "JobCreationFragment";
 
@@ -60,6 +62,7 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     Button saveButton;
     Button cancelButton;
     Button deleteButton;
+    Button verifyButton;
 
     ListView employeeList;
     EmployeeAdapter employeeAdapter;
@@ -83,8 +86,6 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.job_edit_layout, container, false);
-
-        setHasOptionsMenu(true);
 
         jobNameInput = view.findViewById(R.id.job_edit_name);
         jobAddressInput = view.findViewById(R.id.job_edit_address);
@@ -114,6 +115,8 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
         cancelButton.setOnClickListener(this);
         deleteButton = view.findViewById(R.id.job_edit_delete_button);
         deleteButton.setOnClickListener(this);
+        verifyButton = view.findViewById(R.id.job_edit_verify_address_button);
+        verifyButton.setOnClickListener(this);
 
         jobNameInput.setText(MainActivity.currentJob.getJobTitle());
         jobAddressInput.setText(MainActivity.currentJob.getJobAddress());
@@ -166,6 +169,45 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     @Override
     public void onClick(View view) {
 
+
+        if (view.getId() == verifyButton.getId()) {
+
+            Geocoder coder = new Geocoder(getContext());
+            List<Address> address;
+            Address location = null;
+
+            try {
+                address = coder.getFromLocationName(jobAddressInput.getText().toString(),5);
+                if (address==null) {
+                    return;
+                }
+                try{
+                    location = address.get(0);
+                    Log.d("CHECK ADDRESS ", location.getAddressLine(0));
+
+
+
+                }catch(Exception e){
+                    Toast.makeText(getContext(), "Not a valid address.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    return;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(location != null){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle("Address is set to");
+                builder.setMessage("Selected address is set to: " + location.getAddressLine(0));
+                builder.setPositiveButton("Ok", this);
+                builder.create();
+                builder.show();
+            }
+
+        }
 
         if (view.getId() == saveButton.getId()) {
             saveJob();
@@ -496,5 +538,10 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
         MainActivity.selectorJobHour = jobTimeInput.getCurrentHour();
         employeeList.setAdapter(employeeAdapter);
         employeeAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+
     }
 }

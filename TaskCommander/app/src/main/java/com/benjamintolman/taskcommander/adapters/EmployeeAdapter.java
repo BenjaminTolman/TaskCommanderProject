@@ -21,13 +21,11 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class EmployeeAdapter extends BaseAdapter {
 
-    private static final String TAG = "BookAdapter";
+    private static final String TAG = "EmployeeAdapter";
     public static final int ID_CONSTANT = 0x01000000;
 
     final ArrayList<Employee> mCollection;
     final Context mContext;
-
-    boolean isbusy = false;
 
     int radius = 100;
     int margin = 5;
@@ -77,7 +75,7 @@ public class EmployeeAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // Return a child view for an item at a specified position.
         if (convertView == null) {
-            //Is the recycleable view we are using from our created context.
+            //Is the recyclable view we are using from our created context.
             convertView = LayoutInflater.from(mContext).inflate(R.layout.employee_item_layout, parent, false);
         }
 
@@ -86,70 +84,65 @@ public class EmployeeAdapter extends BaseAdapter {
         if (position <= getCount()) {
             TextView eName = convertView.findViewById(R.id.employee_item_name);
             TextView busyText = convertView.findViewById(R.id.job_creation_employee_selector_busytext);
-
-            //todo put in the how many jobs they have here.
-            //todo for each job in jobs, if it's assigned to this user, then yes.
+            TextView jobCount = convertView.findViewById(R.id.employee_item_job_count);
 
             ImageView image = convertView.findViewById(R.id.employee_item_profile_image);
             eName.setText(employee.getName());
 
-            if(MainActivity.currentScreen.equals("Employees")){
+            int jobCounter = 0;
+
+            if (MainActivity.currentScreen.equals("Employees")) {
                 busyText.setVisibility(View.GONE);
-            }else{
-                //todo
-                //If this is a jobs edit/create screen check jobs for this employee
-                //If the job is assigned to them, and the current hour of the job
-                //assignment screen is the same then user is busy
-                //todo add in if =/- an hour for hour time.
+            }
 
-                Log.d("HITTING ", employee.getName());
-                //if(!isbusy){
-                //    busyText.setText("");
-                //}
+            for (int i = 0; i < MainActivity.jobs.size(); i++) {
+                if (MainActivity.jobs.get(i).getEmployeeAssigned().equals(employee.getName())) {
+                    jobCounter++;
+                }
+            }
 
-                for (int i = 0; i < MainActivity.jobs.size(); i++) {
-                    if(MainActivity.jobs.get(i).getEmployeeAssigned().equals(employee.getName())){
+            for (int i = 0; i < MainActivity.jobs.size(); i++) {
+                if (MainActivity.jobs.get(i).getEmployeeAssigned().equals(employee.getName())) {
 
-                        int day = MainActivity.jobs.get(i).getJobDay();
-                        int month = MainActivity.jobs.get(i).getJobMonth();
-                        int year = MainActivity.jobs.get(i).getJobYear();
-                        int hour = MainActivity.jobs.get(i).getJobHour();
-                        int hourPlus = hour += 1;
-                        int hourMinus = hour -= 1;
+                    int day = MainActivity.jobs.get(i).getJobDay();
+                    int month = MainActivity.jobs.get(i).getJobMonth();
+                    int year = MainActivity.jobs.get(i).getJobYear();
+                    int hour = MainActivity.jobs.get(i).getJobHour();
 
-                        Log.d("Mday ",String.valueOf(MainActivity.jobs.get(i).getJobDay()));
-                        Log.d("MMonth",String.valueOf(MainActivity.jobs.get(i).getJobMonth()));
-                        Log.d("Myear ",String.valueOf(MainActivity.jobs.get(i).getJobYear()));
-                        Log.d("Mhour ",String.valueOf(MainActivity.jobs.get(i).getJobHour()));
-                        Log.d("Cday ",String.valueOf(MainActivity.selectorJobDay));
-                        Log.d("Cmonth ",String.valueOf(MainActivity.selectorJobMonth));
-                        Log.d("Cyear ",String.valueOf(MainActivity.selectorJobYear));
-                        Log.d("Chour ",String.valueOf(MainActivity.selectorJobHour));
+                    Log.d("Mday ", String.valueOf(MainActivity.jobs.get(i).getJobDay()));
+                    Log.d("MMonth", String.valueOf(MainActivity.jobs.get(i).getJobMonth()));
+                    Log.d("Myear ", String.valueOf(MainActivity.jobs.get(i).getJobYear()));
+                    Log.d("Mhour ", String.valueOf(MainActivity.jobs.get(i).getJobHour()));
+                    Log.d("Cday ", String.valueOf(MainActivity.selectorJobDay));
+                    Log.d("Cmonth ", String.valueOf(MainActivity.selectorJobMonth));
+                    Log.d("Cyear ", String.valueOf(MainActivity.selectorJobYear));
+                    Log.d("Chour ", String.valueOf(MainActivity.selectorJobHour));
 
-
-                        if(hour == MainActivity.selectorJobHour &&
+                    if (hour == MainActivity.selectorJobHour &&
                             day == MainActivity.selectorJobDay &&
                             month == MainActivity.selectorJobMonth &&
-                            year == MainActivity.selectorJobYear ){
-                            Log.d("MATCH ", employee.getName());
-                            busyText.setText("Busy at this time.");
-                            String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + employee.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
-                            Picasso.get().load(imageUri)
-                                    .transform(transformation).into((image));
-                            return convertView;
-                        }
+                            year == MainActivity.selectorJobYear) {
+                        Log.d("MATCH ", employee.getName());
+                        busyText.setText("Busy at this time.");
+                        String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + employee.getImageURL() + "?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
+                        Picasso.get().load(imageUri)
+                                .transform(transformation).into((image));
+                        jobCount.setText(String.valueOf(jobCounter));
+
+                        return convertView;
                     }
                 }
             }
 
+            jobCount.setText(String.valueOf(jobCounter));
 
-
-
-            String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + employee.getEmail() + "profile.jpg?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
+            String imageUri = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + employee.getImageURL() + "?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";
             Picasso.get().load(imageUri)
                     .transform(transformation).into((image));
-        }
 
+
+
+        }
         return convertView;
     }
 }

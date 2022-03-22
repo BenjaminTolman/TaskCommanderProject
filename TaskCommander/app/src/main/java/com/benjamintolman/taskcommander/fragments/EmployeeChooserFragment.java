@@ -40,8 +40,6 @@ public class EmployeeChooserFragment extends Fragment implements View.OnClickLis
 
         View view = inflater.inflate(R.layout.employee_chooser_layout, container, false);
 
-        setHasOptionsMenu(true);
-
         employeeList = view.findViewById(R.id.employee_chooser_listview);
 
         EmployeeAdapter employeeAdapter = new EmployeeAdapter(MainActivity.employees,getContext());

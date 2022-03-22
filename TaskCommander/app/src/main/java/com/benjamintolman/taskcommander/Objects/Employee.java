@@ -12,6 +12,7 @@ public class Employee {
     private String phone;
     private String role;
     private String companyCode;
+    private String imageURL;
 
     private double lat = 0;
     private double lon = 0;
@@ -21,13 +22,22 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String email, String name, String password, String phone, String role, String companyCode) {
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public Employee(String email, String name, String password, String phone, String role, String companyCode, String imageURL) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.phone = phone;
         this.role = role;
         this.companyCode = companyCode;
+        this.imageURL = imageURL;
     }
 
     public String getEmail() {
