@@ -2,6 +2,8 @@ package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -13,13 +15,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -35,21 +40,35 @@ import com.benjamintolman.taskcommander.R;
 import com.benjamintolman.taskcommander.Utils.NetworkUtility;
 import com.benjamintolman.taskcommander.Utils.ValidationUtility;
 import com.benjamintolman.taskcommander.adapters.EmployeeAdapter;
+import com.benjamintolman.taskcommander.adapters.JobImagesAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-public class JobEditFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener, DialogInterface.OnClickListener {
+public class JobEditFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener, DialogInterface.OnClickListener, View.OnFocusChangeListener {
 
     public static final String TAG = "JobCreationFragment";
-
+    private static final int CAMERA_REQUEST = 1890;
     public static String assignmentSelection;
+
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    GridView imageGrid;
+    JobImagesAdapter jobImagesAdapter;
+    Button newImageButton;
+
 
     EditText jobNameInput;
     EditText jobAddressInput;
@@ -58,7 +77,7 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     EditText jobNotesInput;
     EditText clientNameInput;
     EditText clientPhoneInput;
-    Button employeeAssignment;
+    TextView employeeAssignment;
     Button saveButton;
     Button cancelButton;
     Button deleteButton;
@@ -87,6 +106,19 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
 
         View view = inflater.inflate(R.layout.job_edit_layout, container, false);
 
+        //todo these are new
+        jobImagesAdapter = new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext());
+        imageGrid = view.findViewById(R.id.job_edit_grid_view);
+        imageGrid.setAdapter(jobImagesAdapter);
+        setGridViewHeight(imageGrid, 3);
+        newImageButton = view.findViewById(R.id.job_edit_new_image_button);
+        newImageButton.setOnClickListener(this);
+
+
+        if(MainActivity.currentJob.jobImageURLs == null){
+            imageGrid.setVisibility(View.GONE);
+        }
+
         jobNameInput = view.findViewById(R.id.job_edit_name);
         jobAddressInput = view.findViewById(R.id.job_edit_address);
         jobTimeInput = view.findViewById(R.id.job_edit_timepicker);
@@ -99,6 +131,7 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
         jobNotesInput = view.findViewById(R.id.job_edit_notes);
         clientNameInput = view.findViewById(R.id.job_edit_client_name);
         clientPhoneInput = view.findViewById(R.id.job_edit_phone);
+        clientPhoneInput.setOnFocusChangeListener(this);
         employeeAssignment = view.findViewById(R.id.job_edit_layout_assigned_button);
         employeeAssignment.setOnClickListener(this);
 
@@ -169,6 +202,12 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     @Override
     public void onClick(View view) {
 
+        if(view.getId() == newImageButton.getId()){
+
+            //todo go to the take image and callback
+
+            return;
+        }
 
         if (view.getId() == verifyButton.getId()) {
 
@@ -543,5 +582,126 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
 
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if(view.getId() == clientPhoneInput.getId())
+        {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public void setGridViewHeight(GridView gridView, int columns) {
+
+        int totalHeight = 0;
+        int items = jobImagesAdapter.getCount();
+        int rows = 0;
+
+        View listItem = jobImagesAdapter.getView(0, null, gridView);
+        listItem.measure(0, 0);
+        totalHeight = listItem.getMeasuredHeight();
+
+        float x = 1;
+        if( items > columns ){
+            x = items/columns;
+            rows = (int) (x + 1);
+            totalHeight *= rows;
+        }
+
+        ViewGroup.LayoutParams params = gridView.getLayoutParams();
+        params.height = totalHeight;
+        gridView.setLayoutParams(params);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageData)
+    {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            Bitmap photo = (Bitmap) imageData.getExtras().get("data");
+
+            float aspectRatio = photo.getWidth() /
+                    (float) photo.getHeight();
+            int width = 300;
+            int height = 300;
+            //int height = Math.round(width / aspectRatio);
+
+            photo = Bitmap.createScaledBitmap(
+                    photo, width, height, false);
+
+            // Create a Cloud Storage reference from the app
+            StorageReference storageRef = storage.getReference();
+
+            int min = 20;
+            int max = 800000;
+            int random = new Random().nextInt((max - min) + 1) + min;
+            String newImageURL = MainActivity.currentJob.getJobTitle() + random;
+
+            StorageReference profileRef = storageRef.child(newImageURL);
+
+            // Get the data from an ImageView as bytes
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = profileRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d("ERROR", "UPLOADING");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    imageGrid.setVisibility(View.VISIBLE);
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    // Create a new user with a first and last name
+
+                    Map<String, Object> imageURL = new HashMap<>();
+                    imageURL.put("jobimageurls", MainActivity.currentJob.jobImageURLs);
+
+                    //this should be an ID not whatever we have
+
+                    //db.collection(companyCode).document("users").collection("list").document(email).set(user)
+                    db.collection("jobs").document(MainActivity.currentJob.getJobTitle()).update(imageURL)
+
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "DocumentSnapshot successfully written!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error writing document", e);
+                                }
+                            });
+
+                    if(MainActivity.currentJob.jobImageURLs != null){
+                        MainActivity.currentJob.jobImageURLs.add(newImageURL);
+                        jobImagesAdapter.notifyDataSetChanged();
+                        imageGrid.setAdapter(new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext()));
+                        return;
+                    }
+                    else{
+                        MainActivity.currentJob.jobImageURLs = new ArrayList<>();
+                        MainActivity.currentJob.jobImageURLs.add(newImageURL);
+                        jobImagesAdapter.notifyDataSetChanged();
+                        imageGrid.setAdapter(new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext()));
+                    }
+
+                }
+
+            });
+        }else{
+            Toast.makeText(getContext(), "You must have a profile image.", Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 }

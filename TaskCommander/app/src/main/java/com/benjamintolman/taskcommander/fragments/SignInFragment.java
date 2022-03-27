@@ -33,6 +33,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class SignInFragment extends Fragment implements View.OnClickListener {
@@ -225,6 +227,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 String companyCode = document.get("companycode").toString();
                                 if (companyCode.equals(MainActivity.currentUser.getCompanyCode())) {
 
+
+
                                     Job newJob = new Job(
                                             document.get("name").toString(),
                                             document.get("address").toString(),
@@ -241,6 +245,10 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             document.get("companycode").toString()
                                     );
 
+                                    if(document.get("jobimageurls") != null){
+                                        ArrayList<String> imageURLs = (ArrayList<String>) document.get("jobimageurls");
+                                        newJob.jobImageURLs = imageURLs;
+                                    }
                                     MainActivity.jobs.add(newJob);
 
                                 } else {

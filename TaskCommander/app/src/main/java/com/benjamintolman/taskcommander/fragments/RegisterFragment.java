@@ -50,6 +50,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -144,6 +145,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         if(view.getId() == profileImage.getId()){
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            return;
         }
 
         if(view.getId() == registerButton.getId()){
@@ -248,7 +250,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
                  // Create a reference to "mountains.jpg"
                  StorageReference profileRef = storageRef.child(newImageURL);
-
 
                  // Get the data from an ImageView as bytes
                  profileImage.setDrawingCacheEnabled(true);
@@ -364,6 +365,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                                             document.get("companycode").toString()
                                     );
 
+                                    if(document.get("jobimageurls") != null){
+                                        ArrayList<String> imageURLs = (ArrayList<String>) document.get("jobimageurls");
+                                        newJob.jobImageURLs = imageURLs;
+                                    }
                                     MainActivity.jobs.add(newJob);
 
                                 } else {

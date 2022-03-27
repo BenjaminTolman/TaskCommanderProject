@@ -147,14 +147,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="28dp"
                 android:backgroundTint="#215E9E"
                 android:text="@string/save"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.025"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/job_edit_employee_list" />
+                app:layout_constraintTop_toBottomOf="@+id/job_edit_grid_view" />
 
             <Button
                 android:id="@+id/job_edit_verify_address_button"
@@ -309,14 +309,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_edit_client_name" />
 
-            <Button
+            <TextView
                 android:id="@+id/job_edit_layout_assigned_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="28dp"
                 android:text="Unassigned"
+                android:textColor="@color/white"
+                android:background="@color/forestgreen"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_creation_assign_textview" />
@@ -324,10 +327,10 @@
             <ListView
                 android:id="@+id/job_edit_employee_list"
                 android:layout_width="0dp"
-                android:layout_height="257dp"
-                android:layout_marginStart="1dp"
+                android:layout_height="146dp"
+                android:layout_marginStart="28dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="1dp"
+                android:layout_marginEnd="28dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_edit_layout_assigned_button" />
@@ -370,6 +373,45 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_edit_phone" />
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="24dp"
+                android:text="Job Images"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/guideline5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/job_edit_employee_list" />
+
+            <Button
+                android:id="@+id/job_edit_new_image_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="28dp"
+                android:backgroundTint="#215E9E"
+                android:text="New Image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.53"
+                app:layout_constraintStart_toStartOf="@+id/guideline5"
+                app:layout_constraintTop_toBottomOf="@+id/job_edit_employee_list" />
+
+            <GridView
+                android:id="@+id/job_edit_grid_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="28dp"
+                android:numColumns="3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

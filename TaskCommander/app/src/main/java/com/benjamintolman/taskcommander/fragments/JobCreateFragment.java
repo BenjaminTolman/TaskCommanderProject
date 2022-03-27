@@ -14,11 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -47,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JobCreateFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener, DialogInterface.OnClickListener{
+public class JobCreateFragment extends Fragment implements View.OnClickListener , AdapterView.OnItemClickListener, TimePicker.OnTimeChangedListener, DatePicker.OnDateChangedListener, DialogInterface.OnClickListener, View.OnFocusChangeListener {
 
     public static final String TAG = "JobCreationFragment";
 
@@ -60,7 +62,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     EditText jobNotesInput;
     EditText clientNameInput;
     EditText clientPhoneInput;
-    Button employeeAssignment;
+    TextView employeeAssignment;
     Button saveButton;
     Button cancelButton;
     Button addressVerifyButton;
@@ -101,6 +103,7 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
         jobNotesInput = view.findViewById(R.id.job_creation_notes);
         clientNameInput = view.findViewById(R.id.job_creation_client_name);
         clientPhoneInput = view.findViewById(R.id.job_creation_phone);
+        clientPhoneInput.setOnFocusChangeListener(this);
         employeeAssignment = view.findViewById(R.id.job_create_layout_assigned_button);
         employeeAssignment.setOnClickListener(this);
 
@@ -388,5 +391,14 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
 
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if(view.getId() == clientPhoneInput.getId())
+        {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

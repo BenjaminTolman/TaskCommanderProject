@@ -1,9 +1,11 @@
 package com.benjamintolman.taskcommander.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
@@ -13,17 +15,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.benjamintolman.taskcommander.MainActivity;
-import com.benjamintolman.taskcommander.Objects.Job;
 import com.benjamintolman.taskcommander.R;
+import com.benjamintolman.taskcommander.adapters.JobImagesAdapter;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,19 +37,32 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
-
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-public class JobDetailsFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, OnMapReadyCallback, AdapterView.OnItemClickListener, GoogleMap.InfoWindowAdapter {
+public class JobDetailsFragment extends Fragment implements View.OnClickListener,
+        AdapterView.OnItemSelectedListener, OnMapReadyCallback, AdapterView.OnItemClickListener,
+        GoogleMap.InfoWindowAdapter {
 
     public static final String TAG = "JobDetailsFragment";
+    private static final int CAMERA_REQUEST = 1889;
 
     private GoogleMap mMap;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    GridView imageGrid;
+    JobImagesAdapter jobImagesAdapter;
+    Button newImageButton;
+
 
     TextView jobNameInput;
     TextView jobAddressInput;
@@ -79,6 +93,18 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.job_details_layout, container, false);
 
+        jobImagesAdapter = new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext());
+
+        imageGrid = view.findViewById(R.id.job_details_grid_view);
+        imageGrid.setAdapter(jobImagesAdapter);
+        setGridViewHeight(imageGrid, 1);
+
+        newImageButton = view.findViewById(R.id.job_details_new_image_button);
+        newImageButton.setOnClickListener(this);
+
+        if(MainActivity.currentJob.jobImageURLs == null){
+            imageGrid.setVisibility(View.GONE);
+        }
 
         jobNameInput = view.findViewById(R.id.job_details_name);
         jobAddressInput = view.findViewById(R.id.job_details_address);
@@ -144,6 +170,13 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
 
+        if(view.getId() == newImageButton.getId()){
+
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            return;
+        }
+
         if(view.getId() == cancelButton.getId()){
             getParentFragmentManager().beginTransaction().replace(
                     R.id.fragment_holder,
@@ -185,8 +218,6 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully written!");
-
-
 
                     }
                 })
@@ -308,4 +339,117 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
                 e.printStackTrace();
             }
     }
+
+    public void setGridViewHeight(GridView gridView, int columns) {
+
+        int totalHeight = 0;
+        int items = jobImagesAdapter.getCount();
+        int rows = 0;
+
+        View listItem = jobImagesAdapter.getView(0, null, gridView);
+        listItem.measure(0, 0);
+        totalHeight = listItem.getMeasuredHeight();
+
+        float x = 1;
+        if( items > columns ){
+            x = items/columns;
+            rows = (int) (x + 1);
+            totalHeight *= rows;
+        }
+
+        ViewGroup.LayoutParams params = gridView.getLayoutParams();
+        params.height = totalHeight;
+        gridView.setLayoutParams(params);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageData)
+    {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
+        {
+            Bitmap photo = (Bitmap) imageData.getExtras().get("data");
+
+            float aspectRatio = photo.getWidth() /
+                    (float) photo.getHeight();
+            int width = 300;
+            int height = 300;
+            //int height = Math.round(width / aspectRatio);
+
+            photo = Bitmap.createScaledBitmap(
+                    photo, width, height, false);
+
+            // Create a Cloud Storage reference from the app
+            StorageReference storageRef = storage.getReference();
+
+            int min = 20;
+            int max = 800000;
+            int random = new Random().nextInt((max - min) + 1) + min;
+            String newImageURL = MainActivity.currentJob.getJobTitle() + random;
+
+            StorageReference profileRef = storageRef.child(newImageURL);
+
+            // Get the data from an ImageView as bytes
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = profileRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d("ERROR", "UPLOADING");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    imageGrid.setVisibility(View.VISIBLE);
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    // Create a new user with a first and last name
+
+                    Map<String, Object> imageURL = new HashMap<>();
+                    imageURL.put("jobimageurls", MainActivity.currentJob.jobImageURLs);
+
+                    //this should be an ID not whatever we have
+
+                    //db.collection(companyCode).document("users").collection("list").document(email).set(user)
+                    db.collection("jobs").document(MainActivity.currentJob.getJobTitle()).update(imageURL)
+
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "DocumentSnapshot successfully written!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error writing document", e);
+                                }
+                            });
+
+                    if(MainActivity.currentJob.jobImageURLs != null){
+                        MainActivity.currentJob.jobImageURLs.add(newImageURL);
+                        jobImagesAdapter.notifyDataSetChanged();
+                        imageGrid.setAdapter(new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext()));
+                        return;
+                    }
+                    else{
+                        MainActivity.currentJob.jobImageURLs = new ArrayList<>();
+                        MainActivity.currentJob.jobImageURLs.add(newImageURL);
+                        jobImagesAdapter.notifyDataSetChanged();
+                        imageGrid.setAdapter(new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext()));
+                    }
+
+                }
+
+            });
+        }else{
+            Toast.makeText(getContext(), "You must have a profile image.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
+
 }

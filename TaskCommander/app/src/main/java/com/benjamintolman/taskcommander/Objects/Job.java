@@ -1,5 +1,6 @@
 package com.benjamintolman.taskcommander.Objects;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Job{
@@ -17,6 +18,7 @@ public class Job{
     private String jobNotes;
     private String clientName;
     private String companyCode;
+    public ArrayList<String> jobImageURLs;
 
     public Double getJobLat() {
         return jobLat;

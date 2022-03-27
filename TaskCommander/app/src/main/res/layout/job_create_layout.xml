@@ -277,14 +277,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_creation_client_name" />
 
-            <Button
+            <TextView
                 android:id="@+id/job_create_layout_assigned_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="28dp"
+                android:clickable="false"
                 android:text="Unassigned"
+                android:textColor="@color/white"
+                android:background="@color/forestgreen"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/job_creation_assign_textview" />
@@ -305,8 +309,8 @@
 
             <ListView
                 android:id="@+id/job_creation_employee_list"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_width="411dp"
+                android:layout_height="118dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="1dp"
