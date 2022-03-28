@@ -164,6 +164,30 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
         activity.setTitle("Job Details");
         MainActivity.currentScreen = "Job Details";
 
+        if(MainActivity.currentUser.getRole().equals("Manager")){
+            Map<String, Object> job = new HashMap<>();
+            job.put("updated", "");
+            //this should be an ID not whatever we have
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            // Create a new user with a first and last name
+            //db.collection(companyCode).document("users").collection("list").document(email).set(user)
+            db.collection("jobs").document(MainActivity.currentJob.getJobTitle()).update(job)
+
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                        }
+                    });
+        }
+
         return view;
     }
 
@@ -174,7 +198,7 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
 
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            return;
+
         }
 
         if(view.getId() == cancelButton.getId()){
@@ -209,16 +233,17 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
 
         Map<String, Object> job = new HashMap<>();
         job.put("status", status);
+        job.put("updated", "true");
         //this should be an ID not whatever we have
 
+        //, SetOptions.merge()
         //db.collection(companyCode).document("users").collection("list").document(email).set(user)
-        db.collection("jobs").document(MainActivity.currentJob.getJobTitle()).set(job, SetOptions.merge())
+        db.collection("jobs").document(MainActivity.currentJob.getJobTitle()).update(job)
 
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully written!");
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -284,12 +309,6 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
             Toast.makeText(getContext(), "This employee does not have Location Data.", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        //LatLng newLoc = new LatLng(MainActivity.currentUser.getLat(), MainActivity.currentUser.getLon());
-        //CameraUpdate cameraMovement = CameraUpdateFactory.newLatLngZoom(newLoc, 5);
-
-        //mMap.moveCamera(cameraMovement);
-
     }
 
     private void addMapMarker(double lats, double lons) {
@@ -387,7 +406,6 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
             String newImageURL = MainActivity.currentJob.getJobTitle() + random;
 
             StorageReference profileRef = storageRef.child(newImageURL);
-
             // Get the data from an ImageView as bytes
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -404,15 +422,16 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    imageGrid.setVisibility(View.VISIBLE);
-
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     // Create a new user with a first and last name
 
+                    if (MainActivity.currentJob.jobImageURLs == null) {
+                        MainActivity.currentJob.jobImageURLs = new ArrayList<>();
+                    }
+                    MainActivity.currentJob.jobImageURLs.add(newImageURL);
+
                     Map<String, Object> imageURL = new HashMap<>();
                     imageURL.put("jobimageurls", MainActivity.currentJob.jobImageURLs);
-
-                    //this should be an ID not whatever we have
 
                     //db.collection(companyCode).document("users").collection("list").document(email).set(user)
                     db.collection("jobs").document(MainActivity.currentJob.getJobTitle()).update(imageURL)
@@ -430,26 +449,15 @@ public class JobDetailsFragment extends Fragment implements View.OnClickListener
                                 }
                             });
 
-                    if(MainActivity.currentJob.jobImageURLs != null){
-                        MainActivity.currentJob.jobImageURLs.add(newImageURL);
-                        jobImagesAdapter.notifyDataSetChanged();
-                        imageGrid.setAdapter(new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext()));
-                        return;
-                    }
-                    else{
-                        MainActivity.currentJob.jobImageURLs = new ArrayList<>();
-                        MainActivity.currentJob.jobImageURLs.add(newImageURL);
-                        jobImagesAdapter.notifyDataSetChanged();
-                        imageGrid.setAdapter(new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext()));
-                    }
-
+                    imageGrid.setVisibility(View.VISIBLE);
+                    jobImagesAdapter = new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext());
+                    imageGrid.setAdapter(jobImagesAdapter);
+                    setGridViewHeight(imageGrid, 1);
                 }
-
             });
         }else{
             Toast.makeText(getContext(), "You must have a profile image.", Toast.LENGTH_SHORT).show();
             return;
         }
     }
-
 }

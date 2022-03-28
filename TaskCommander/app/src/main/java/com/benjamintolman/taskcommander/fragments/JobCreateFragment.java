@@ -334,7 +334,8 @@ public class JobCreateFragment extends Fragment implements View.OnClickListener 
                                     clientPhone,
                                     employeeAssigned,
                                     "Posted",
-                                    MainActivity.currentUser.getCompanyCode()
+                                    MainActivity.currentUser.getCompanyCode(),
+                                    ""
                             );
 
                             MainActivity.jobs.add(newJob);

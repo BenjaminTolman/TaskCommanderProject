@@ -19,6 +19,7 @@ public class Job{
     private String clientName;
     private String companyCode;
     public ArrayList<String> jobImageURLs;
+    private String updated = "";
 
     public Double getJobLat() {
         return jobLat;
@@ -71,9 +72,13 @@ public class Job{
     private String clientPhone;
     private String employeeAssigned;
 
+    public String getUpdated() {
+        return updated;
+    }
+
     public Job(String jobTitle, String jobAddress, int jobHour, int jobMin, int jobDay,
                int jobMonth, int jobYear, String jobNotes, String clientName, String clientPhone,
-               String employeeAssigned, String jobStatus, String companyCode) {
+               String employeeAssigned, String jobStatus, String companyCode, String updated) {
         this.jobTitle = jobTitle;
         this.jobAddress = jobAddress;
         this.jobHour = jobHour;
@@ -87,6 +92,7 @@ public class Job{
         this.employeeAssigned = employeeAssigned;
         this.jobStatus = jobStatus;
         this.companyCode = companyCode;
+        this.updated = updated;
     }
 
     public String getCompanyCode() {

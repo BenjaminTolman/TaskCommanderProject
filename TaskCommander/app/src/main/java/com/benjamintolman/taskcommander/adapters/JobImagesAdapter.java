@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class JobImagesAdapter extends BaseAdapter {
 
-    private static final String TAG = "BookAdapter";
+    private static final String TAG = "Job Images Adapter";
     public static final int ID_CONSTANT = 0x01000000;
 
     final ArrayList<String> mCollection;
@@ -76,12 +76,8 @@ public class JobImagesAdapter extends BaseAdapter {
             //Is the recycleable view we are using from our created context.
             convertView = LayoutInflater.from(mContext).inflate(R.layout.job_image_layout, parent, false);
         }
-
-        //todo get job, iterate it's imageurls, pop em in.
-        //Job job = (Job) getItem(position);
         String imageURL = (String) getItem(position);
 
-        //test URL https://picsum.photos/200
         if(position <= getCount())
         {
             String fullURL = "https://firebasestorage.googleapis.com/v0/b/taskcommander-3f0e3.appspot.com/o/" + imageURL + "?alt=media&token=fa379ac1-e777-4322-b4d1-8b9e11ece91e";

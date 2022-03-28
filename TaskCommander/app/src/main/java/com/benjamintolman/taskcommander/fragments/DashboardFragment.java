@@ -52,6 +52,14 @@ public class DashboardFragment extends Fragment implements View.OnClickListener 
             employeesButton.setVisibility(View.GONE);
         }
 
+        for (int i = 0; i < MainActivity.jobs.size(); i++) {
+            if(MainActivity.currentUser.isHasUpdates()){
+                jobsButton.setText("Jobs - Updates");
+                jobsButton.setBackgroundColor(getResources().getColor(R.color.forestgreen));
+                MainActivity.currentUser.setHasUpdates(false);
+            }
+        }
+
         Activity activity = getActivity();
         activity.setTitle("Dashboard");
 

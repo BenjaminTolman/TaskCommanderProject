@@ -167,12 +167,10 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             );
 
                                             logInSuccess = true;
-
                                             MainActivity.currentUser = thisEmployee;
                                             getJobs();
                                             getUsers();
 
-                                            //todo hook this up to firebase.
                                             lu.getUserLocationData(getContext());
 
 
@@ -227,8 +225,6 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                 String companyCode = document.get("companycode").toString();
                                 if (companyCode.equals(MainActivity.currentUser.getCompanyCode())) {
 
-
-
                                     Job newJob = new Job(
                                             document.get("name").toString(),
                                             document.get("address").toString(),
@@ -242,9 +238,13 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
                                             document.get("cPhone").toString(),
                                             document.get("assigned").toString(),
                                             document.get("status").toString(),
-                                            document.get("companycode").toString()
+                                            document.get("companycode").toString(),
+                                            document.get("updated").toString()
                                     );
 
+                                    if(newJob.getUpdated().equals("true") && MainActivity.currentUser.getRole().equals("Manager")){
+                                        MainActivity.currentUser.setHasUpdates(true);
+                                    }
                                     if(document.get("jobimageurls") != null){
                                         ArrayList<String> imageURLs = (ArrayList<String>) document.get("jobimageurls");
                                         newJob.jobImageURLs = imageURLs;

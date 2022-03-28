@@ -204,9 +204,8 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
 
         if(view.getId() == newImageButton.getId()){
 
-            //todo go to the take image and callback
-
-            return;
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
         }
 
         if (view.getId() == verifyButton.getId()) {
@@ -418,7 +417,8 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                         clientPhone,
                         employeeAssigned,
                         MainActivity.currentJob.getJobStatus(),
-                        MainActivity.currentUser.getCompanyCode()
+                        MainActivity.currentUser.getCompanyCode(),
+                        ""
                 );
 
 
@@ -606,8 +606,7 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
         float x = 1;
         if( items > columns ){
             x = items/columns;
-            rows = (int) (x + 1);
-            totalHeight *= rows;
+            rows = (int) (x + 1);            totalHeight *= rows;
         }
 
         ViewGroup.LayoutParams params = gridView.getLayoutParams();
@@ -640,7 +639,6 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
             String newImageURL = MainActivity.currentJob.getJobTitle() + random;
 
             StorageReference profileRef = storageRef.child(newImageURL);
-
             // Get the data from an ImageView as bytes
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -657,15 +655,16 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    imageGrid.setVisibility(View.VISIBLE);
-
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     // Create a new user with a first and last name
 
+                    if (MainActivity.currentJob.jobImageURLs == null) {
+                        MainActivity.currentJob.jobImageURLs = new ArrayList<>();
+                    }
+                    MainActivity.currentJob.jobImageURLs.add(newImageURL);
+
                     Map<String, Object> imageURL = new HashMap<>();
                     imageURL.put("jobimageurls", MainActivity.currentJob.jobImageURLs);
-
-                    //this should be an ID not whatever we have
 
                     //db.collection(companyCode).document("users").collection("list").document(email).set(user)
                     db.collection("jobs").document(MainActivity.currentJob.getJobTitle()).update(imageURL)
@@ -683,21 +682,12 @@ public class JobEditFragment extends Fragment implements View.OnClickListener , 
                                 }
                             });
 
-                    if(MainActivity.currentJob.jobImageURLs != null){
-                        MainActivity.currentJob.jobImageURLs.add(newImageURL);
-                        jobImagesAdapter.notifyDataSetChanged();
-                        imageGrid.setAdapter(new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext()));
-                        return;
-                    }
-                    else{
-                        MainActivity.currentJob.jobImageURLs = new ArrayList<>();
-                        MainActivity.currentJob.jobImageURLs.add(newImageURL);
-                        jobImagesAdapter.notifyDataSetChanged();
-                        imageGrid.setAdapter(new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext()));
-                    }
 
+                    imageGrid.setVisibility(View.VISIBLE);
+                    jobImagesAdapter = new JobImagesAdapter(MainActivity.currentJob.jobImageURLs,getContext());
+                    imageGrid.setAdapter(jobImagesAdapter);
+                    setGridViewHeight(imageGrid, 1);
                 }
-
             });
         }else{
             Toast.makeText(getContext(), "You must have a profile image.", Toast.LENGTH_SHORT).show();

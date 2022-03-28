@@ -362,7 +362,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                                             document.get("cPhone").toString(),
                                             document.get("assigned").toString(),
                                             document.get("status").toString(),
-                                            document.get("companycode").toString()
+                                            document.get("companycode").toString(),
+                                            document.get("updated").toString()
                                     );
 
                                     if(document.get("jobimageurls") != null){

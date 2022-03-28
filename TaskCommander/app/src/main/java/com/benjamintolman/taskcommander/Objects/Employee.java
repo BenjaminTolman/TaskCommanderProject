@@ -18,8 +18,17 @@ public class Employee {
     private double lon = 0;
 
     private ArrayList<Job> jobList;
+    private boolean hasUpdates = false;
 
     public Employee() {
+    }
+
+    public boolean isHasUpdates() {
+        return hasUpdates;
+    }
+
+    public void setHasUpdates(boolean hasUpdates) {
+        this.hasUpdates = hasUpdates;
     }
 
     public String getImageURL() {
